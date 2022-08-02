@@ -1,18 +1,5 @@
 import React from 'react'
-import {
-  CButton,
-  CButtonGroup,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CDropdown,
-  CDropdownDivider,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CRow,
-} from '@coreui/react'
+import { CButton, CButtonGroup, CCard, CCardBody, CCardHeader, CCol, CDropdown, CDropdownDivider, CDropdownItem, CDropdownMenu, CDropdownToggle, CRow } from '@coreui/react'
 import { DocsExample } from 'src/components'
 
 const Dropdowns = () => {
@@ -25,8 +12,7 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Here&#39;s how you can put them to work with either <code>&lt;button&gt;</code>{' '}
-              elements:
+              Here&#39;s how you can put them to work with either <code>&lt;button&gt;</code> elements:
             </p>
             <DocsExample href="components/dropdown#single-button">
               <CDropdown>
@@ -38,25 +24,21 @@ const Dropdowns = () => {
                 </CDropdownMenu>
               </CDropdown>
             </DocsExample>
-            <p className="text-medium-emphasis small">
-              The best part is you can do this with any button variant, too:
-            </p>
+            <p className="text-medium-emphasis small">The best part is you can do this with any button variant, too:</p>
             <DocsExample href="components/dropdown#single-button">
               <>
-                {['primary', 'secondary', 'success', 'info', 'warning', 'danger'].map(
-                  (color, index) => (
-                    <CDropdown variant="btn-group" key={index}>
-                      <CDropdownToggle color={color}>{color}</CDropdownToggle>
-                      <CDropdownMenu>
-                        <CDropdownItem href="#">Action</CDropdownItem>
-                        <CDropdownItem href="#">Another action</CDropdownItem>
-                        <CDropdownItem href="#">Something else here</CDropdownItem>
-                        <CDropdownDivider />
-                        <CDropdownItem href="#">Separated link</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  ),
-                )}
+                {['primary', 'secondary', 'success', 'info', 'warning', 'danger'].map((color, index) => (
+                  <CDropdown variant="btn-group" key={index}>
+                    <CDropdownToggle color={color}>{color}</CDropdownToggle>
+                    <CDropdownMenu>
+                      <CDropdownItem href="#">Action</CDropdownItem>
+                      <CDropdownItem href="#">Another action</CDropdownItem>
+                      <CDropdownItem href="#">Something else here</CDropdownItem>
+                      <CDropdownDivider />
+                      <CDropdownItem href="#">Separated link</CDropdownItem>
+                    </CDropdownMenu>
+                  </CDropdown>
+                ))}
               </>
             </DocsExample>
           </CCardBody>
@@ -69,33 +51,26 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Similarly, create split button dropdowns with virtually the same markup as single
-              button dropdowns, but with the addition of boolean prop <code>split</code> for proper
-              spacing around the dropdown caret.
+              Similarly, create split button dropdowns with virtually the same markup as single button dropdowns, but with the addition of boolean prop <code>split</code> for proper spacing around the dropdown caret.
             </p>
             <p className="text-medium-emphasis small">
-              We use this extra class to reduce the horizontal <code>padding</code> on either side
-              of the caret by 25% and remove the <code>margin-left</code> that&#39;s attached for
-              normal button dropdowns. Those additional changes hold the caret centered in the split
-              button and implement a more properly sized hit area next to the main button.
+              We use this extra class to reduce the horizontal <code>padding</code> on either side of the caret by 25% and remove the <code>margin-left</code> that&#39;s attached for normal button dropdowns. Those additional changes hold the caret centered in the split button and implement a more properly sized hit area next to the main button.
             </p>
             <DocsExample href="components/dropdown#split-button">
               <>
-                {['primary', 'secondary', 'success', 'info', 'warning', 'danger'].map(
-                  (color, index) => (
-                    <CDropdown variant="btn-group" key={index}>
-                      <CButton color={color}>{color}</CButton>
-                      <CDropdownToggle color={color} split />
-                      <CDropdownMenu>
-                        <CDropdownItem href="#">Action</CDropdownItem>
-                        <CDropdownItem href="#">Another action</CDropdownItem>
-                        <CDropdownItem href="#">Something else here</CDropdownItem>
-                        <CDropdownDivider />
-                        <CDropdownItem href="#">Separated link</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  ),
-                )}
+                {['primary', 'secondary', 'success', 'info', 'warning', 'danger'].map((color, index) => (
+                  <CDropdown variant="btn-group" key={index}>
+                    <CButton color={color}>{color}</CButton>
+                    <CDropdownToggle color={color} split />
+                    <CDropdownMenu>
+                      <CDropdownItem href="#">Action</CDropdownItem>
+                      <CDropdownItem href="#">Another action</CDropdownItem>
+                      <CDropdownItem href="#">Something else here</CDropdownItem>
+                      <CDropdownDivider />
+                      <CDropdownItem href="#">Separated link</CDropdownItem>
+                    </CDropdownMenu>
+                  </CDropdown>
+                ))}
               </>
             </DocsExample>
           </CCardBody>
@@ -107,10 +82,7 @@ const Dropdowns = () => {
             <strong>React Dropdown</strong> <small>Sizing</small>
           </CCardHeader>
           <CCardBody>
-            <p className="text-medium-emphasis small">
-              Button dropdowns work with buttons of all sizes, including default and split dropdown
-              buttons.
-            </p>
+            <p className="text-medium-emphasis small">Button dropdowns work with buttons of all sizes, including default and split dropdown buttons.</p>
             <DocsExample href="components/dropdown#sizing">
               <CDropdown variant="btn-group">
                 <CDropdownToggle color="secondary" size="lg">
@@ -175,8 +147,7 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Opt into darker dropdowns to match a dark navbar or custom style by set{' '}
-              <code>dark</code> property. No changes are required to the dropdown items.
+              Opt into darker dropdowns to match a dark navbar or custom style by set <code>dark</code> property. No changes are required to the dropdown items.
             </p>
             <DocsExample href="components/dropdown#dark-dropdowns">
               <CDropdown dark>
@@ -197,15 +168,7 @@ const Dropdowns = () => {
                   <a className="navbar-brand" href="https://coreui.io/react/">
                     Navbar
                   </a>
-                  <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-coreui-toggle="collapse"
-                    data-coreui-target="#navbarNavDarkDropdown"
-                    aria-controls="navbarNavDarkDropdown"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                  >
+                  <button className="navbar-toggler" type="button" data-coreui-toggle="collapse" data-coreui-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                   </button>
                   <div className="collapse navbar-collapse" id="navbarNavDarkDropdown">
@@ -235,9 +198,7 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Trigger dropdown menus above elements by adding{' '}
-              <code>direction=&#34;dropup&#34;</code> to the <code>&lt;CDropdown&gt;</code>{' '}
-              component.
+              Trigger dropdown menus above elements by adding <code>direction=&#34;dropup&#34;</code> to the <code>&lt;CDropdown&gt;</code> component.
             </p>
             <DocsExample href="components/dropdown#dropup">
               <CDropdown variant="btn-group" direction="dropup">
@@ -272,9 +233,7 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Trigger dropdown menus at the right of the elements by adding{' '}
-              <code>direction=&#34;dropend&#34;</code> to the <code>&lt;CDropdown&gt;</code>{' '}
-              component.
+              Trigger dropdown menus at the right of the elements by adding <code>direction=&#34;dropend&#34;</code> to the <code>&lt;CDropdown&gt;</code> component.
             </p>
             <DocsExample href="components/dropdown#dropright">
               <CDropdown variant="btn-group" direction="dropend">
@@ -309,9 +268,7 @@ const Dropdowns = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Trigger dropdown menus at the left of the elements by adding{' '}
-              <code>direction=&#34;dropstart&#34;</code> to the <code>&lt;CDropdown&gt;</code>{' '}
-              component.
+              Trigger dropdown menus at the left of the elements by adding <code>direction=&#34;dropstart&#34;</code> to the <code>&lt;CDropdown&gt;</code> component.
             </p>
             <DocsExample href="components/dropdown#dropleft">
               <CButtonGroup>

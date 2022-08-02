@@ -1,6 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilEnvelopeOpen, cilGroup, cilPeople, cilPuzzle } from '@coreui/icons'
+// eslint-disable-next-line no-unused-vars
+import { cilEnvelopeOpen, cilGroup, cilPeople } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
 const _nav = [

@@ -1,14 +1,5 @@
 import React from 'react'
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCarousel,
-  CCarouselCaption,
-  CCarouselItem,
-  CCol,
-  CRow,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCarousel, CCarouselCaption, CCarouselItem, CCol, CRow } from '@coreui/react'
 import { DocsExample } from 'src/components'
 
 import AngularImg from 'src/assets/images/angular.jpg'
@@ -78,9 +69,7 @@ const Carousels = () => {
             <strong>Carousel</strong> <small>With indicators</small>
           </CCardHeader>
           <CCardBody>
-            <p className="text-medium-emphasis small">
-              You can attach the indicators to the carousel, lengthwise the controls, too.
-            </p>
+            <p className="text-medium-emphasis small">You can attach the indicators to the carousel, lengthwise the controls, too.</p>
             <DocsExample href="components/carousel/#with-indicators">
               <CCarousel controls indicators>
                 <CCarouselItem>
@@ -104,11 +93,7 @@ const Carousels = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              You can add captions to slides with the <code>&lt;CCarouselCaption&gt;</code> element
-              within any <code>&lt;CCarouselItem&gt;</code>. They can be immediately hidden on
-              smaller viewports, as shown below, with optional{' '}
-              <a href="https://coreui.io/4.0/utilities/display">display utilities</a>. We hide them
-              with <code>.d-none</code> and draw them back on medium-sized devices with{' '}
+              You can add captions to slides with the <code>&lt;CCarouselCaption&gt;</code> element within any <code>&lt;CCarouselItem&gt;</code>. They can be immediately hidden on smaller viewports, as shown below, with optional <a href="https://coreui.io/4.0/utilities/display">display utilities</a>. We hide them with <code>.d-none</code> and draw them back on medium-sized devices with{' '}
               <code>.d-md-block</code>.
             </p>
             <DocsExample href="components/carousel/#with-captions">
@@ -146,8 +131,7 @@ const Carousels = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Add <code>transition=&#34;crossfade&#34;</code> to your carousel to animate slides
-              with a fade transition instead of a slide.
+              Add <code>transition=&#34;crossfade&#34;</code> to your carousel to animate slides with a fade transition instead of a slide.
             </p>
             <DocsExample href="components/carousel/#crossfade">
               <CCarousel controls transition="crossfade">
@@ -172,10 +156,7 @@ const Carousels = () => {
           </CCardHeader>
           <CCardBody>
             <p className="text-medium-emphasis small">
-              Add <code>dark</code> property to the <code>CCarousel</code> for darker controls,
-              indicators, and captions. Controls have been inverted from their default white fill
-              with the <code>filter</code> CSS property. Captions and controls have additional Sass
-              variables that customize the <code>color</code> and <code>background-color</code>.
+              Add <code>dark</code> property to the <code>CCarousel</code> for darker controls, indicators, and captions. Controls have been inverted from their default white fill with the <code>filter</code> CSS property. Captions and controls have additional Sass variables that customize the <code>color</code> and <code>background-color</code>.
             </p>
             <DocsExample href="components/carousel/#dark-variant">
               <CCarousel controls indicators dark>

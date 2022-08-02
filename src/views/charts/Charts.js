@@ -1,13 +1,6 @@
 import React from 'react'
 import { CCard, CCardBody, CCol, CCardHeader, CRow } from '@coreui/react'
-import {
-  CChartBar,
-  CChartDoughnut,
-  CChartLine,
-  CChartPie,
-  CChartPolarArea,
-  CChartRadar,
-} from '@coreui/react-chartjs'
+import { CChartBar, CChartDoughnut, CChartLine, CChartPie, CChartPolarArea, CChartRadar } from '@coreui/react-chartjs'
 import { DocsCallout } from 'src/components'
 
 const Charts = () => {
@@ -16,11 +9,7 @@ const Charts = () => {
   return (
     <CRow>
       <CCol xs={12}>
-        <DocsCallout
-          name="Chart"
-          href="components/chart"
-          content="React wrapper component for Chart.js 3.0, the most popular charting library."
-        />
+        <DocsCallout name="Chart" href="components/chart" content="React wrapper component for Chart.js 3.0, the most popular charting library." />
       </CCol>
       <CCol xs={6}>
         <CCard className="mb-4">
@@ -133,15 +122,7 @@ const Charts = () => {
           <CCardBody>
             <CChartRadar
               data={{
-                labels: [
-                  'Eating',
-                  'Drinking',
-                  'Sleeping',
-                  'Designing',
-                  'Coding',
-                  'Cycling',
-                  'Running',
-                ],
+                labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
                 datasets: [
                   {
                     label: 'My First dataset',
