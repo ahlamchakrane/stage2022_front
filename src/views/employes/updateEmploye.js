@@ -4,7 +4,7 @@ import axios from 'axios'
 export const EmployeContext = React.createContext()
 
 // eslint-disable-next-line react/prop-types
-const UpdateEmploye = ({ id, username, email, telephone, isVisible }) => {
+const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVisible }) => {
   const [visible, setVisible] = useState(isVisible)
   const [usernameUpdated, setUsernameUpdated] = useState()
   const [emailUpdated, setEmailUpdated] = useState()
@@ -34,8 +34,12 @@ const UpdateEmploye = ({ id, username, email, telephone, isVisible }) => {
         console.log(error.toJSON())
       })
   }
+  const close = () => {
+    setVisible(!isVisible)
+    changeVisibility(!isVisible)
+  }
   return (
-    <CModal visible={visible} onClose={() => setVisible(!isVisible)}>
+    <CModal visible={visible} onClose={() => close()}>
       <CModalHeader>
         <CModalTitle>Edit Employés</CModalTitle>
       </CModalHeader>
@@ -71,7 +75,7 @@ const UpdateEmploye = ({ id, username, email, telephone, isVisible }) => {
               <CButton color="success" type="submit" shape="rounded-pill">
                 Save changes
               </CButton>
-              <CButton color="secondary" onClick={() => setVisible(!isVisible)} shape="rounded-pill">
+              <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close
               </CButton>
             </CModalFooter>

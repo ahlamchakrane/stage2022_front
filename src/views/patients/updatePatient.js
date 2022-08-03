@@ -3,7 +3,7 @@ import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelec
 import axios from 'axios'
 
 // eslint-disable-next-line react/prop-types
-const UpdatePatient = ({ id, nom, email, telephone, typePatient, isVisible }) => {
+const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatient, isVisible }) => {
   const [visible, setVisible] = useState(isVisible)
   const [nomUpdated, setNomUpdated] = useState()
   const [emailUpdated, setEmailUpdated] = useState()
@@ -29,8 +29,12 @@ const UpdatePatient = ({ id, nom, email, telephone, typePatient, isVisible }) =>
         console.log(error.toJSON())
       })
   }
+  const close = () => {
+    setVisible(!isVisible)
+    changeVisibility(!isVisible)
+  }
   return (
-    <CModal visible={visible} onClose={() => setVisible(!isVisible)}>
+    <CModal visible={visible} onClose={() => close()}>
       <CModalHeader>
         <CModalTitle>Edit Employés</CModalTitle>
       </CModalHeader>
@@ -65,7 +69,7 @@ const UpdatePatient = ({ id, nom, email, telephone, typePatient, isVisible }) =>
               <CButton color="success" type="submit" shape="rounded-pill">
                 Save changes
               </CButton>
-              <CButton color="secondary" onClick={() => setVisible(!isVisible)} shape="rounded-pill">
+              <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close
               </CButton>
             </CModalFooter>

@@ -42,6 +42,9 @@ const AllDemandesTraitees = (props) => {
         console.log(error.toJSON())
       })
   }
+  const changeVisibility = (isVisible) => {
+    setVisible(isVisible)
+  }
   return (
     <>
       {success && <ModalSuccess isSuccess={success} />}
@@ -80,8 +83,7 @@ const AllDemandesTraitees = (props) => {
                   style={{
                     marginRight: 5,
                   }}
-                  onClick={() => setVisible(!visible)}
-                  onMouseEnter={() => handleUpdate(item.id)}
+                  onClick={() => handleUpdate(item.id)}
                 >
                   {visible && <UpdateDemande date={item.date} />}
                   <CIcon icon={cilEyedropper} />
@@ -92,7 +94,7 @@ const AllDemandesTraitees = (props) => {
               </CTableDataCell>
             </CTableRow>
           ))}
-          {visible && <UpdateDemande id={demande.id} date={demande.date} status={demande.status} isVisible={visible} />}
+          {visible && <UpdateDemande changeVisibility={changeVisibility} id={demande.id} date={demande.date} status={demande.status} isVisible={visible} />}
         </CTableBody>
       </CTable>
     </>

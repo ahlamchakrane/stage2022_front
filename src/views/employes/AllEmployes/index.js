@@ -27,8 +27,7 @@ const AllEmployes = (props) => {
       .catch(function (error) {
         console.log(error.toJSON())
       })
-    console.log(visible)
-  }, [visible])
+  }, [])
   const deleteEmploye = (id) => {
     // axios.delete(`http://localhost:3000/employes/${id}`).then((res) => {
     //   const employes = res.data
@@ -46,6 +45,9 @@ const AllEmployes = (props) => {
       .catch(function (error) {
         console.log(error.toJSON())
       })
+  }
+  const changeVisibility = (isVisible) => {
+    setVisible(isVisible)
   }
   return (
     <>
@@ -89,8 +91,7 @@ const AllEmployes = (props) => {
                   style={{
                     marginRight: 5,
                   }}
-                  onClick={() => setVisible(!visible)}
-                  onMouseEnter={() => handleUpdate(item.id)}
+                  onClick={() => handleUpdate(item.id)}
                 >
                   <CIcon icon={cilEyedropper} />
                 </CButton>
@@ -100,7 +101,7 @@ const AllEmployes = (props) => {
               </CTableDataCell>
             </CTableRow>
           ))}
-          {visible && <UpdateEmploye id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
+          {visible && <UpdateEmploye changeVisibility={changeVisibility} id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
         </CTableBody>
       </CTable>
     </>

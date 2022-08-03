@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
+export const DemandeContext = createContext()
 
 // eslint-disable-next-line react/prop-types
-const UpdateDemande = ({ date, status, isVisible, id }) => {
+const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   const [dateUpdated, setDateUpdated] = useState(date)
   const [statusUpdated, setStatusUpdated] = useState(status)
   const [visible, setVisible] = useState(isVisible)
@@ -17,15 +18,18 @@ const UpdateDemande = ({ date, status, isVisible, id }) => {
     axios
       .put(`demandes/${id}`, demande)
       .then((res) => {
-        console.log('')
         setVisible(!visible)
       })
       .catch(function (error) {
         console.log(error.toJSON())
       })
   }
+  const close = () => {
+    setVisible(!isVisible)
+    changeVisibility(!isVisible)
+  }
   return (
-    <CModal visible={visible} onClose={() => setVisible(!isVisible)}>
+    <CModal visible={visible} onClose={() => close()}>
       <CModalHeader>
         <CModalTitle>Edit Demandes</CModalTitle>
       </CModalHeader>
@@ -51,7 +55,7 @@ const UpdateDemande = ({ date, status, isVisible, id }) => {
               <CButton color="success" type="submit" shape="rounded-pill">
                 Save changes
               </CButton>
-              <CButton color="secondary" onClick={() => setVisible(!isVisible)} shape="rounded-pill">
+              <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close
               </CButton>
             </CModalFooter>

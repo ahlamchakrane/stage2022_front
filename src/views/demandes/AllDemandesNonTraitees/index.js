@@ -1,20 +1,21 @@
+/* eslint-disable prettier/prettier */
 import { cilCalendar, cilEyedropper, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import UpdateDemande from '../updateDemande'
+import UpdateDemande, { DemandeContext } from '../updateDemande'
 import ModalSuccess from 'src/views/modals/modalSuccess'
 import ModalError from 'src/views/modals/modalError'
 // Containers
 
-const AllDemandesNonTraitees = (props) => {
+// eslint-disable-next-line react/prop-types
+const AllDemandesNonTraitees = () => {
   const [demandes, setDemandes] = useState([])
   const [visible, setVisible] = useState(false)
   const [demande, setDemande] = useState({})
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
-
   useEffect(() => {
     const list = []
     axios
@@ -41,6 +42,9 @@ const AllDemandesNonTraitees = (props) => {
       .catch(function (error) {
         console.log(error.toJSON())
       })
+  }
+  const changeVisibility = (isVisible) => {
+    setVisible(isVisible)
   }
   return (
     <>
@@ -80,8 +84,7 @@ const AllDemandesNonTraitees = (props) => {
                   style={{
                     marginRight: 5,
                   }}
-                  onClick={() => setVisible(!visible)}
-                  onMouseEnter={() => handleUpdate(item.id)}
+                  onClick={() => handleUpdate(item.id)}
                 >
                   <CIcon icon={cilEyedropper} />
                 </CButton>
@@ -91,7 +94,7 @@ const AllDemandesNonTraitees = (props) => {
               </CTableDataCell>
             </CTableRow>
           ))}
-          {visible && <UpdateDemande id={demande.id} date={demande.date} status={demande.status} isVisible={visible} demandes={demandes} />}
+          {visible && <UpdateDemande changeVisibility={changeVisibility} id={demande.id} date={demande.date} status={demande.status} isVisible={visible} demandes={demandes} />}
         </CTableBody>
       </CTable>
     </>

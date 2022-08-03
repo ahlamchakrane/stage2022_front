@@ -43,7 +43,9 @@ const AllPatients = (props) => {
         console.log(error.toJSON())
       })
   }
-
+  const changeVisibility = (isVisible) => {
+    setVisible(isVisible)
+  }
   return (
     <>
       {success && <ModalSuccess isSuccess={success} />}
@@ -94,8 +96,7 @@ const AllPatients = (props) => {
                   style={{
                     marginRight: 5,
                   }}
-                  onClick={() => setVisible(!visible)}
-                  onMouseEnter={() => handleUpdate(item.id)}
+                  onClick={() => handleUpdate(item.id)}
                 >
                   <CIcon icon={cilEyedropper} />
                 </CButton>
@@ -105,7 +106,7 @@ const AllPatients = (props) => {
               </CTableDataCell>
             </CTableRow>
           ))}
-          {visible && <UpdatePatient id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
+          {visible && <UpdatePatient changeVisibility={changeVisibility} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
         </CTableBody>
       </CTable>
     </>
