@@ -17,12 +17,17 @@ const UpdatePatient = ({ id, nom, email, telephone, typePatient, isVisible }) =>
     if (e.target.id === 'typePatient') setTypePatient(e.target.value)
   }
   const handleSubmit = (e) => {
+    e.preventDefault()
     const patient = { nom: nomUpdated, email: emailUpdated, telephone: telephoneUpdated, typePatient: typePatientUpdated }
-    console.log(patient)
-    axios.put(`patients/${id}`, patient).then((res) => {
-      console.log(res)
-      setVisible(!visible)
-    })
+    axios
+      .put(`patients/${id}`, patient)
+      .then((res) => {
+        console.log('')
+        setVisible(!visible)
+      })
+      .catch(function (error) {
+        console.log(error.toJSON())
+      })
   }
   return (
     <CModal visible={visible} onClose={() => setVisible(!isVisible)}>
@@ -48,7 +53,7 @@ const UpdatePatient = ({ id, nom, email, telephone, typePatient, isVisible }) =>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="typePatient">Type Patient</CFormLabel>
-            <CFormSelect id="typePatient" invalid onChange={handleChange}>
+            <CFormSelect id="typePatient" invalid onChange={handleChange} defaultValue={typePatient}>
               <option disabled>Choose...</option>
               <option value="STAFF">STAFF</option>
               <option value="POSTBAC">POST BAC</option>

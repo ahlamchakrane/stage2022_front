@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
+export const EmployeContext = React.createContext()
 
 // eslint-disable-next-line react/prop-types
 const UpdateEmploye = ({ id, username, email, telephone, isVisible }) => {
@@ -18,17 +19,20 @@ const UpdateEmploye = ({ id, username, email, telephone, isVisible }) => {
     if (e.target.id === 'password') setPassword(e.target.value)
     if (e.target.id === 'cPassword') setCPassword(e.target.value)
   }
-
   const handleSubmit = (e) => {
+    e.preventDefault()
     if (password !== 0 && cPassword !== 0) {
       if (password !== cPassword) console.log('show err message')
     }
     const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password }
-    console.log(employe)
-    axios.put(`employes/${id}`, employe).then((res) => {
-      console.log(res)
-      setVisible(!visible)
-    })
+    axios
+      .put(`employes/${id}`, employe)
+      .then((res) => {
+        setVisible(!visible)
+      })
+      .catch(function (error) {
+        console.log(error.toJSON())
+      })
   }
   return (
     <CModal visible={visible} onClose={() => setVisible(!isVisible)}>

@@ -12,11 +12,17 @@ const UpdateDemande = ({ date, status, isVisible, id }) => {
     if (e.target.id === 'date') setDateUpdated(e.target.value)
   }
   const handleSubmit = (e) => {
+    e.preventDefault()
     const demande = { date: dateUpdated, status: statusUpdated }
-    axios.put(`demandes/${id}`, demande).then((res) => {
-      console.log(res)
-      setVisible(!visible)
-    })
+    axios
+      .put(`demandes/${id}`, demande)
+      .then((res) => {
+        console.log('')
+        setVisible(!visible)
+      })
+      .catch(function (error) {
+        console.log(error.toJSON())
+      })
   }
   return (
     <CModal visible={visible} onClose={() => setVisible(!isVisible)}>
@@ -32,7 +38,7 @@ const UpdateDemande = ({ date, status, isVisible, id }) => {
           </CCol>
           <CCol md={5}>
             <CFormLabel htmlFor="status">Status</CFormLabel>
-            <CFormSelect id="status" invalid onChange={handleChange}>
+            <CFormSelect id="status" invalid onChange={handleChange} defaultValue={status}>
               <option disabled>Choose...</option>
               <option value="CANCELED">CANCLED</option>
               <option value="PENDING">PENDING</option>
