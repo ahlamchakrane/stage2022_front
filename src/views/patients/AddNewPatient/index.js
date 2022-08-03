@@ -32,10 +32,16 @@ const AddNewPatient = (props) => {
         setError(!error)
       })
   }
+  const changeSuccess = (isVisible) => {
+    setSuccess(isVisible)
+  }
+  const changeError = (isVisible) => {
+    setError(isVisible)
+  }
   return (
     <CRow>
-      {success && <ModalSuccess isSuccess={success} />}
-      {error && <ModalError isError={error} />}
+      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>

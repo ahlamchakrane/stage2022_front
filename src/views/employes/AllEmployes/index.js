@@ -49,10 +49,18 @@ const AllEmployes = (props) => {
   const changeVisibility = (isVisible) => {
     setVisible(isVisible)
   }
+  const changeSuccess = (isVisible) => {
+    // setSuccess(isVisible)
+    console.log(isVisible)
+  }
+  const changeError = (isVisible) => {
+    // setError(isVisible)
+    console.log(isVisible)
+  }
   return (
     <>
-      {success && <ModalSuccess isSuccess={success} />}
-      {error && <ModalError isError={error} />}
+      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       <CTable align="middle" className="mb-0 border" hover responsive>
         <CTableHead color="light">
           <CTableRow>

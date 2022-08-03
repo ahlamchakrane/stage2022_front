@@ -48,8 +48,8 @@ const AllDemandesNonTraitees = () => {
   }
   return (
     <>
-      {success && <ModalSuccess isSuccess={success} />}
-      {error && <ModalError isError={error} />}
+      {success && <ModalSuccess changeVisibility={changeVisibility} isSuccess={success} />}
+      {error && <ModalError changeVisibility={changeVisibility} isError={error} />}
       <CTable align="middle" className="mb-0 border" hover responsive>
         <CTableHead color="light">
           <CTableRow>
