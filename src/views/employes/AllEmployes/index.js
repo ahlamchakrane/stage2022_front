@@ -30,10 +30,14 @@ const AllEmployes = (props) => {
       })
   }, [])
   const deleteEmploye = (id) => {
-    // axios.delete(`http://localhost:3000/employes/${id}`).then((res) => {
-    //   const employes = res.data
-    //   console.log(employes)
-    // })
+    axios
+      .delete(`/employes/${id}`)
+      .then((res) => {
+        setSuccess(!success)
+      })
+      .catch(function (error) {
+        setError(!error)
+      })
   }
   const handleUpdate = (id) => {
     axios
@@ -54,8 +58,7 @@ const AllEmployes = (props) => {
     setSuccess(isVisible)
   }
   const changeError = (isVisible) => {
-    // setError(isVisible)
-    console.log(isVisible)
+    setError(isVisible)
   }
   return (
     <>

@@ -27,9 +27,14 @@ const AllPatients = (props) => {
   }, [])
 
   const deletePatient = (id) => {
-    axios.delete(`/patients/${id}`).then((res) => {
-      console.log(res)
-    })
+    axios
+      .delete(`/patients/${id}`)
+      .then((res) => {
+        setSuccess(!success)
+      })
+      .catch(function (error) {
+        setError(!error)
+      })
   }
   const handleUpdate = (id) => {
     axios
@@ -46,10 +51,16 @@ const AllPatients = (props) => {
   const changeVisibility = (isVisible) => {
     setVisible(isVisible)
   }
+  const changeSuccess = (isVisible) => {
+    setSuccess(isVisible)
+  }
+  const changeError = (isVisible) => {
+    setError(isVisible)
+  }
   return (
     <>
-      {success && <ModalSuccess />}
-      {error && <ModalError />}
+      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       <CTable align="middle" className="mb-0 border" hover responsive>
         <CTableHead color="light">
           <CTableRow>

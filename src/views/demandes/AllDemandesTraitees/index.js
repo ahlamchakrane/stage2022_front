@@ -31,6 +31,16 @@ const AllDemandesTraitees = (props) => {
         console.log(error.toJSON())
       })
   }, [])
+  const deleteDemande = (id) => {
+    axios
+      .delete(`/demandes/${id}`)
+      .then((res) => {
+        setSuccess(!success)
+      })
+      .catch(function (error) {
+        setError(!error)
+      })
+  }
   const handleUpdate = (id) => {
     axios
       .get(`/demandes/${id}`)
@@ -46,10 +56,16 @@ const AllDemandesTraitees = (props) => {
   const changeVisibility = (isVisible) => {
     setVisible(isVisible)
   }
+  const changeSuccess = (isVisible) => {
+    setSuccess(isVisible)
+  }
+  const changeError = (isVisible) => {
+    setError(isVisible)
+  }
   return (
     <>
-      {success && <ModalSuccess changeVisibility={changeVisibility} isSuccess={success} />}
-      {error && <ModalError changeVisibility={changeVisibility} isError={error} />}
+      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       <CTable align="middle" className="mb-0 border" hover responsive>
         <CTableHead color="light">
           <CTableRow>
@@ -89,7 +105,7 @@ const AllDemandesTraitees = (props) => {
                   {visible && <UpdateDemande date={item.date} />}
                   <CIcon icon={cilEyedropper} />
                 </CButton>
-                <CButton color="danger" shape="rounded-pill">
+                <CButton color="danger" shape="rounded-pill" onClick={() => deleteDemande(item.id)}>
                   <CIcon icon={cilTrash} />
                 </CButton>
               </CTableDataCell>
