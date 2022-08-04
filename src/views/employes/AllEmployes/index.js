@@ -19,7 +19,7 @@ const AllEmployes = (props) => {
   const [error, setError] = useState(false)
   useEffect(() => {
     axios
-      .get('employes')
+      .get('/employes')
       .then((res) => {
         const employes = res.data
         setEmployes(employes)
@@ -36,7 +36,7 @@ const AllEmployes = (props) => {
   }
   const handleUpdate = (id) => {
     axios
-      .get(`employes/${id}`)
+      .get(`/employes/${id}`)
       .then((res) => {
         const employe = res.data
         setEmploye(employe)
@@ -50,8 +50,7 @@ const AllEmployes = (props) => {
     setVisible(isVisible)
   }
   const changeSuccess = (isVisible) => {
-    // setSuccess(isVisible)
-    console.log(isVisible)
+    setSuccess(isVisible)
   }
   const changeError = (isVisible) => {
     // setError(isVisible)

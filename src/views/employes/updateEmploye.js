@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
+import React, { useEffect, useState } from 'react'
+import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
 export const EmployeContext = React.createContext()
 
@@ -9,6 +9,8 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   const [usernameUpdated, setUsernameUpdated] = useState()
   const [emailUpdated, setEmailUpdated] = useState()
   const [telephoneUpdated, setTelephoneUpdated] = useState()
+  const [roleUpdated, setRoleUpdated] = useState('USER')
+  const [userRole, setUserRole] = useState({ id: null, nom: 'USER' })
   const [cPassword, setPassword] = useState(0)
   const [password, setCPassword] = useState(0)
 
@@ -18,15 +20,39 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     if (e.target.id === 'telephone') setTelephoneUpdated(e.target.value)
     if (e.target.id === 'password') setPassword(e.target.value)
     if (e.target.id === 'cPassword') setCPassword(e.target.value)
+    if (e.target.id === 'roleUpdated') setRoleUpdated(e.target.value)
   }
+  const getRoles = () => {
+    const obj = { id: null, nom: null }
+    axios
+      .get('/roles')
+      .then((res) => {
+        const allRoles = res.data
+        allRoles.map(async (r) => {
+          // eslint-disable-next-line no-unused-expressions
+          if (r.nom === roleUpdated) {
+            obj.id = r.id
+            obj.nom = r.nom
+          }
+        })
+        setUserRole(obj)
+      })
+      .catch(function (error) {
+        console.log(error.toJSON())
+      })
+  }
+  useEffect(() => {
+    getRoles()
+  }, [roleUpdated])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (password !== 0 && cPassword !== 0) {
       if (password !== cPassword) console.log('show err message')
     }
-    const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password }
+    const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password, roles: [userRole] }
     axios
-      .put(`employes/${id}`, employe)
+      .put(`/employes/${id}`, employe)
       .then((res) => {
         setVisible(!visible)
       })
@@ -62,13 +88,22 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="password">Password</CFormLabel>
-            <CFormInput type="password" id="password" valid required onChange={handleChange} />
+            <CFormInput type="password" id="password" valid onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel>Confirm Password</CFormLabel>
-            <CFormInput type="password" id="cPassword" valid required onChange={handleChange} />
+            <CFormInput type="password" id="cPassword" valid onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="roleUpdated">Roles</CFormLabel>
+            <CFormSelect id="roleUpdated" invalid onChange={handleChange}>
+              <option disabled>Choose...</option>
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </CFormSelect>
+            <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

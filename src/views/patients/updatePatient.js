@@ -20,7 +20,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
     e.preventDefault()
     const patient = { nom: nomUpdated, email: emailUpdated, telephone: telephoneUpdated, typePatient: typePatientUpdated }
     axios
-      .put(`patients/${id}`, patient)
+      .put(`/patients/${id}`, patient)
       .then((res) => {
         console.log('')
         setVisible(!visible)

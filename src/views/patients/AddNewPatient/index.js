@@ -24,7 +24,7 @@ const AddNewPatient = (props) => {
     e.preventDefault()
     const patient = { nom: nom, email: email, telephone: telephone, typePatient: typePatient, genre: genre }
     axios
-      .post(`patients`, patient)
+      .post('/patients', patient)
       .then(() => {
         setSuccess(!success)
       })

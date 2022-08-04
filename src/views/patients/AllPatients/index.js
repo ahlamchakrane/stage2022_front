@@ -27,13 +27,13 @@ const AllPatients = (props) => {
   }, [])
 
   const deletePatient = (id) => {
-    axios.delete(`patients/${id}`).then((res) => {
+    axios.delete(`/patients/${id}`).then((res) => {
       console.log(res)
     })
   }
   const handleUpdate = (id) => {
     axios
-      .get(`patients/${id}`)
+      .get(`/patients/${id}`)
       .then((res) => {
         const patient = res.data
         setVisible(!visible)

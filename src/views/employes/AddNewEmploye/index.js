@@ -32,7 +32,7 @@ const AddNewEmploye = (props) => {
   const getRoles = () => {
     const obj = { id: null, nom: null }
     axios
-      .get('roles')
+      .get('/roles')
       .then((res) => {
         const allRoles = res.data
         allRoles.map(async (r) => {
@@ -52,7 +52,7 @@ const AddNewEmploye = (props) => {
     e.preventDefault()
     const employe = { username: username, email: email, telephone: telephone, genre: genre, password: password, roles: [userRole] }
     axios
-      .post('api/register', employe)
+      .post('/api/register', employe)
       .then(() => {
         setSuccess(!success)
       })

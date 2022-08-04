@@ -18,7 +18,7 @@ const AllDemandesTraitees = (props) => {
   useEffect(() => {
     const list = []
     axios
-      .get('demandes')
+      .get('/demandes')
       .then((res) => {
         const demandes = res.data
         demandes.map(async (demande) => {
@@ -32,7 +32,7 @@ const AllDemandesTraitees = (props) => {
   }, [])
   const handleUpdate = (id) => {
     axios
-      .get(`demandes/${id}`)
+      .get(`/demandes/${id}`)
       .then((res) => {
         const demande = res.data
         setVisible(!visible)

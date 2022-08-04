@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
 export const DemandeContext = createContext()
@@ -16,7 +16,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
     e.preventDefault()
     const demande = { date: dateUpdated, status: statusUpdated }
     axios
-      .put(`demandes/${id}`, demande)
+      .put(`/demandes/${id}`, demande)
       .then((res) => {
         setVisible(!visible)
       })
