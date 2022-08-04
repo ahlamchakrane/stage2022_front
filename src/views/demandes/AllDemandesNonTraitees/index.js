@@ -4,13 +4,16 @@ import CIcon from '@coreui/icons-react'
 import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import UpdateDemande from '../updateDemande'
-import ModalSuccess from 'src/views/modals/modalSuccess'
-import ModalError from 'src/views/modals/modalError'
 // Containers
 
 // eslint-disable-next-line react/prop-types
 const AllDemandesNonTraitees = () => {
+  //import
+  const UpdateDemande = React.lazy(() => import('../updateDemande'))
+  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
+  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+
+
   const [demandes, setDemandes] = useState([])
   const [visible, setVisible] = useState(false)
   const [demande, setDemande] = useState({})

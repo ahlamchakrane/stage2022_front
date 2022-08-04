@@ -5,13 +5,14 @@ import { CAvatar, CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTabl
 // Containers
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import axios from 'axios'
-import UpdateEmploye from '../updateEmploye'
-import ModalSuccess from 'src/views/modals/modalSuccess'
-import ModalError from 'src/views/modals/modalError'
 export const EmployeContext = React.createContext()
 // Containers
 
 const AllEmployes = (props) => {
+  const UpdateEmploye = React.lazy(() => import('../updateEmploye'))
+  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
+  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+
   const [employes, setEmployes] = useState([])
   const [employe, setEmploye] = useState([])
   const [visible, setVisible] = useState(false)

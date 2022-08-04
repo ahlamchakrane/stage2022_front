@@ -1,12 +1,13 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import ModalSuccess from 'src/views/modals/modalSuccess'
-import ModalError from 'src/views/modals/modalError'
 
 // Containers
 
 const AddNewEmploye = (props) => {
+  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
+  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+
   const [username, setUsername] = useState()
   const [email, setEmail] = useState()
   const [telephone, setTelephone] = useState()

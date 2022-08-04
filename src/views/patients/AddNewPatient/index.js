@@ -1,10 +1,11 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
 import React, { useState } from 'react'
 import axios from 'axios'
-import ModalSuccess from 'src/views/modals/modalSuccess'
-import ModalError from 'src/views/modals/modalError'
 
 const AddNewPatient = (props) => {
+  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
+  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+
   const [nom, setNom] = useState()
   const [email, setEmail] = useState()
   const [telephone, setTelephone] = useState()

@@ -3,14 +3,14 @@ import { cilDescription, cilEyedropper, cilPeople, cilTrash } from '@coreui/icon
 import CIcon from '@coreui/icons-react'
 import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
-
 import axios from 'axios'
-import UpdatePatient from '../updatePatient'
-import ModalSuccess from 'src/views/modals/modalSuccess'
-import ModalError from 'src/views/modals/modalError'
 // Containers
 
 const AllPatients = (props) => {
+  const UpdatePatient = React.lazy(() => import('../updatePatient'))
+  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
+  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState([])
   const [visible, setVisible] = useState(false)
