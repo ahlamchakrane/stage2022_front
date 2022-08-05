@@ -25,7 +25,6 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
       })
   }
   const close = () => {
-    setVisible(!isVisible)
     changeVisibility(!isVisible)
   }
   return (

@@ -9,8 +9,8 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   const [usernameUpdated, setUsernameUpdated] = useState()
   const [emailUpdated, setEmailUpdated] = useState()
   const [telephoneUpdated, setTelephoneUpdated] = useState()
-  const [roleUpdated, setRoleUpdated] = useState('USER')
-  const [userRole, setUserRole] = useState({ id: null, nom: 'USER' })
+  const [roleUpdated, setRoleUpdated] = useState(null)
+  const [userRole, setUserRole] = useState(null)
   const [cPassword, setPassword] = useState(0)
   const [password, setCPassword] = useState(0)
 
@@ -30,12 +30,12 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
         const allRoles = res.data
         allRoles.map(async (r) => {
           // eslint-disable-next-line no-unused-expressions
-          if (r.nom === roleUpdated) {
+          if (roleUpdated && r.nom === roleUpdated) {
             obj.id = r.id
             obj.nom = r.nom
           }
         })
-        setUserRole(obj)
+        if (obj.id && obj.nom) setUserRole(obj)
       })
       .catch(function (error) {
         console.log(error.toJSON())
@@ -50,7 +50,8 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     if (password !== 0 && cPassword !== 0) {
       if (password !== cPassword) console.log('show err message')
     }
-    const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password, roles: [userRole] }
+    const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password }
+    if (userRole) employe.roles = [userRole]
     axios
       .put(`/employes/${id}`, employe)
       .then((res) => {
@@ -61,7 +62,6 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
       })
   }
   const close = () => {
-    setVisible(!isVisible)
     changeVisibility(!isVisible)
   }
   return (
@@ -71,7 +71,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
-          <CCol md={4}>
+          <CCol md={5}>
             <CFormLabel htmlFor="username">Username</CFormLabel>
             <CFormInput type="text" id="username" defaultValue={username} valid required onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
@@ -87,23 +87,23 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
+            <CFormLabel htmlFor="roleUpdated">Roles</CFormLabel>
+            <CFormSelect id="roleUpdated" invalid onChange={handleChange}>
+              <option value="null">Choose...</option>
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </CFormSelect>
+            <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
             <CFormLabel htmlFor="password">Password</CFormLabel>
-            <CFormInput type="password" id="password" valid onChange={handleChange} />
+            <CFormInput type="password" id="password" valid onChange={handleChange} placeholder="not obligatory" />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel>Confirm Password</CFormLabel>
             <CFormInput type="password" id="cPassword" valid onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
-          </CCol>
-          <CCol md={6}>
-            <CFormLabel htmlFor="roleUpdated">Roles</CFormLabel>
-            <CFormSelect id="roleUpdated" invalid onChange={handleChange}>
-              <option disabled>Choose...</option>
-              <option value="USER">USER</option>
-              <option value="ADMIN">ADMIN</option>
-            </CFormSelect>
-            <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 
 // eslint-disable-next-line react/prop-types
 const ModalSuccess = ({ changeVisibility, isVisible }) => {
-  const [visible, setVisible] = useState(isVisible)
   const close = () => {
-    setVisible(!isVisible)
     changeVisibility(!isVisible)
   }
   return (
     <>
-      <CModal alignment="center" visible={visible} onClose={() => close()}>
+      <CModal alignment="center" visible={true} onClose={() => close()}>
         <CModalHeader
           style={{
             backgroundColor: '#5eb85e',

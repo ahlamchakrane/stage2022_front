@@ -4,18 +4,25 @@ import CIcon from '@coreui/icons-react'
 import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
 import axios from 'axios'
+import Pagination from 'src/views/Pagination'
 // Containers
 
 const AllPatients = (props) => {
   const UpdatePatient = React.lazy(() => import('../updatePatient'))
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+  const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
 
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState([])
   const [visible, setVisible] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
+  const [clickDelete, setClickDelete] = useState(false)
+  const [id, setId] = useState(false)
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(8)
   useEffect(() => {
     axios
       .get('/patients')
@@ -57,10 +64,28 @@ const AllPatients = (props) => {
   const changeError = (isVisible) => {
     setError(isVisible)
   }
+  const onClickDelete = (id, isVisible) => {
+    setId(id)
+    setClickDelete(!isVisible)
+  }
+  const changeConfirmation = (confirmation) => {
+    if (confirmation) deletePatient(id)
+    setClickDelete(false)
+  }
+  //Get current page
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = patients.slice(indexOfFirstItem, indexOfLastItem)
+  //change page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
   return (
     <>
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
+
       <CTable align="middle" className="mb-0 border" hover responsive>
         <CTableHead color="light">
           <CTableRow>
@@ -74,7 +99,7 @@ const AllPatients = (props) => {
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {patients.map((item, index) => (
+          {currentItems.map((item, index) => (
             <CTableRow v-for="item in tableItems" key={index}>
               <CTableDataCell className="text-center">
                 <span>#{item.id}</span>
@@ -111,7 +136,7 @@ const AllPatients = (props) => {
                 >
                   <CIcon icon={cilEyedropper} />
                 </CButton>
-                <CButton color="danger" shape="rounded-pill" onClick={() => deletePatient(item.id)}>
+                <CButton color="danger" shape="rounded-pill" onClick={() => onClickDelete(item.id, clickDelete)}>
                   <CIcon icon={cilTrash} />
                 </CButton>
               </CTableDataCell>
@@ -120,6 +145,7 @@ const AllPatients = (props) => {
           {visible && <UpdatePatient changeVisibility={changeVisibility} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
         </CTableBody>
       </CTable>
+      <Pagination itemsPerPage={itemsPerPage} totalItems={patients.length} paginate={paginate} />
     </>
   )
 }

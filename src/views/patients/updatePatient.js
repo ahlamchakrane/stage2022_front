@@ -22,7 +22,6 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
     axios
       .put(`/patients/${id}`, patient)
       .then((res) => {
-        console.log('')
         setVisible(!visible)
       })
       .catch(function (error) {
@@ -30,7 +29,6 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
       })
   }
   const close = () => {
-    setVisible(!isVisible)
     changeVisibility(!isVisible)
   }
   return (
