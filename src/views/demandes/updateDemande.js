@@ -1,20 +1,32 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
 export const DemandeContext = createContext()
 
 // eslint-disable-next-line react/prop-types
 const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
-  const [dateUpdated, setDateUpdated] = useState(date)
-  const [statusUpdated, setStatusUpdated] = useState(status)
+  const initialValues = { date: date, status: status }
+  const [formValues, setFormValues] = useState(initialValues)
+  const [formErrors, setFormErrors] = useState({})
   const [visible, setVisible] = useState(isVisible)
+  const [isSubmit, setIsSubmit] = useState(false)
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      handleUpdate()
+    }
+  }, [formErrors])
   const handleChange = (e) => {
-    if (e.target.id === 'status') setStatusUpdated(e.target.value)
-    if (e.target.id === 'date') setDateUpdated(e.target.value)
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    const demande = { date: dateUpdated, status: statusUpdated }
+    setFormErrors(validate(formValues))
+    setIsSubmit(true)
+  }
+  const handleUpdate = (e) => {
+    const demande = formValues
     axios
       .put(`/demandes/${id}`, demande)
       .then((res) => {
@@ -27,6 +39,12 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   const close = () => {
     changeVisibility(!isVisible)
   }
+  const validate = (values) => {
+    const errors = {}
+    if (!values.date) errors.date = 'Date is required'
+    if (!values.status) errors.status = 'Status od demand is required'
+    return errors
+  }
   return (
     <CModal visible={visible} onClose={() => close()}>
       <CModalHeader>
@@ -36,18 +54,18 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
           <CCol md={7}>
             <CFormLabel htmlFor="date">Date</CFormLabel>
-            <CFormInput type="text" id="date" defaultValue={date} valid required onChange={handleChange} />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="text" name="date" value={formValues.date} valid={formErrors.date ? false : true} invalid={formErrors.date ? true : false} required onChange={handleChange} />
+            <CFormFeedback>{formErrors.date}</CFormFeedback>
           </CCol>
           <CCol md={5}>
             <CFormLabel htmlFor="status">Status</CFormLabel>
-            <CFormSelect id="status" invalid onChange={handleChange} defaultValue={status}>
+            <CFormSelect name="status" valid={formErrors.status ? false : true} invalid={formErrors.status ? true : false} onChange={handleChange} value={formValues.status}>
               <option disabled>Choose...</option>
               <option value="CANCELED">CANCLED</option>
               <option value="PENDING">PENDING</option>
               <option value="DONE">DONE</option>
             </CFormSelect>
-            <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
+            <CFormFeedback>{formErrors.status}</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

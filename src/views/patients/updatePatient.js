@@ -5,20 +5,16 @@ import axios from 'axios'
 // eslint-disable-next-line react/prop-types
 const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatient, isVisible }) => {
   const [visible, setVisible] = useState(isVisible)
-  const [nomUpdated, setNomUpdated] = useState()
-  const [emailUpdated, setEmailUpdated] = useState()
-  const [telephoneUpdated, setTelephoneUpdated] = useState()
-  const [typePatientUpdated, setTypePatient] = useState()
+  const initialValues = { nom: nom, email: email, telephone: telephone, typePatient: typePatient }
+  const [formValues, setFormValues] = useState(initialValues)
 
   const handleChange = (e) => {
-    if (e.target.id === 'nom') setNomUpdated(e.target.value)
-    if (e.target.id === 'email') setEmailUpdated(e.target.value)
-    if (e.target.id === 'telephone') setTelephoneUpdated(e.target.value)
-    if (e.target.id === 'typePatient') setTypePatient(e.target.value)
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    const patient = { nom: nomUpdated, email: emailUpdated, telephone: telephoneUpdated, typePatient: typePatientUpdated }
+    const patient = formValues
     axios
       .put(`/patients/${id}`, patient)
       .then((res) => {
@@ -40,22 +36,22 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
           <CCol md={6}>
             <CFormLabel htmlFor="nom">Nom</CFormLabel>
-            <CFormInput type="text" id="nom" defaultValue={nom} valid required onChange={handleChange} />
+            <CFormInput type="text" name="nom" value={formValues.nom} valid required onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="email">email</CFormLabel>
-            <CFormInput type="email" id="email" defaultValue={email} valid required onChange={handleChange} />
+            <CFormInput type="email" name="email" value={formValues.email} valid required onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
-            <CFormInput type="text" id="telephone" defaultValue={telephone} valid required onChange={handleChange} />
+            <CFormInput type="text" name="telephone" value={formValues.telephone} valid required onChange={handleChange} />
             <CFormFeedback valid>Looks good!</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="typePatient">Type Patient</CFormLabel>
-            <CFormSelect id="typePatient" invalid onChange={handleChange} defaultValue={typePatient}>
+            <CFormSelect name="typePatient" invalid onChange={handleChange} value={formValues.typePatient}>
               <option disabled>Choose...</option>
               <option value="STAFF">STAFF</option>
               <option value="POSTBAC">POST BAC</option>

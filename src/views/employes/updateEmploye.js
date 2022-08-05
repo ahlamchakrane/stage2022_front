@@ -6,21 +6,15 @@ export const EmployeContext = React.createContext()
 // eslint-disable-next-line react/prop-types
 const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVisible }) => {
   const [visible, setVisible] = useState(isVisible)
-  const [usernameUpdated, setUsernameUpdated] = useState()
-  const [emailUpdated, setEmailUpdated] = useState()
-  const [telephoneUpdated, setTelephoneUpdated] = useState()
-  const [roleUpdated, setRoleUpdated] = useState(null)
-  const [userRole, setUserRole] = useState(null)
-  const [cPassword, setPassword] = useState(0)
-  const [password, setCPassword] = useState(0)
-
+  const [roles, setRoles] = useState(null)
+  const initialValues = { username: username, email: email, telephone: telephone, roles, password: null }
+  const [formValues, setFormValues] = useState(initialValues)
+  const [formErrors, setFormErrors] = useState({})
+  const [isSubmit, setIsSubmit] = useState(false)
   const handleChange = (e) => {
-    if (e.target.id === 'username') setUsernameUpdated(e.target.value)
-    if (e.target.id === 'email') setEmailUpdated(e.target.value)
-    if (e.target.id === 'telephone') setTelephoneUpdated(e.target.value)
-    if (e.target.id === 'password') setPassword(e.target.value)
-    if (e.target.id === 'cPassword') setCPassword(e.target.value)
-    if (e.target.id === 'roleUpdated') setRoleUpdated(e.target.value)
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
+    if (e.target.id === 'roles') setRoles(e.target.value)
   }
   const getRoles = () => {
     const obj = { id: null, nom: null }
@@ -29,13 +23,12 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
       .then((res) => {
         const allRoles = res.data
         allRoles.map(async (r) => {
-          // eslint-disable-next-line no-unused-expressions
-          if (roleUpdated && r.nom === roleUpdated) {
+          if (roles && r.nom === roles) {
             obj.id = r.id
             obj.nom = r.nom
           }
         })
-        if (obj.id && obj.nom) setUserRole(obj)
+        if (obj.id && obj.nom) setRoles(obj)
       })
       .catch(function (error) {
         console.log(error.toJSON())
@@ -43,15 +36,17 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   }
   useEffect(() => {
     getRoles()
-  }, [roleUpdated])
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (password !== 0 && cPassword !== 0) {
-      if (password !== cPassword) console.log('show err message')
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      handleUpdate()
     }
-    const employe = { username: usernameUpdated, email: emailUpdated, telephone: telephoneUpdated, password: password }
-    if (userRole) employe.roles = [userRole]
+  }, [formErrors, roles])
+
+  const handleUpdate = () => {
+    // if (password !== 0 && cPassword !== 0) {
+    //   if (password !== cPassword) console.log('show err message')
+    // }
+    const employe = formValues
+    if (roles) employe.roles = [roles]
     axios
       .put(`/employes/${id}`, employe)
       .then((res) => {
@@ -61,8 +56,32 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
         console.log(error.toJSON())
       })
   }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setFormErrors(validate(formValues))
+    setIsSubmit(true)
+  }
   const close = () => {
     changeVisibility(!isVisible)
+  }
+  const validate = (values) => {
+    const errors = {}
+    if (!values.username) {
+      errors.username = 'Username is required'
+    }
+    if (!values.email) {
+      errors.email = 'Email is required'
+    }
+    if (!values.telephone) {
+      errors.telephone = 'Phone number is required'
+    }
+    if (values.telephone.length < 9) {
+      errors.telephone = 'Phone number is not correct'
+    }
+    if (values.password && values.password.length < 6) {
+      errors.password = 'password must be more than 6 characters'
+    }
+    return errors
   }
   return (
     <CModal visible={visible} onClose={() => close()}>
@@ -73,37 +92,42 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
           <CCol md={5}>
             <CFormLabel htmlFor="username">Username</CFormLabel>
-            <CFormInput type="text" id="username" defaultValue={username} valid required onChange={handleChange} />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="text" name="username" value={formValues.username} valid={formErrors.username ? false : true} invalid={formErrors.username ? true : false} required onChange={handleChange} />
+            <CFormFeedback>{formErrors.username}</CFormFeedback>
           </CCol>
           <CCol md={7}>
             <CFormLabel htmlFor="email">email</CFormLabel>
-            <CFormInput type="email" id="email" defaultValue={email} valid required onChange={handleChange} />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="email" name="email" value={formValues.email} valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
+            <CFormFeedback>{formErrors.email}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
-            <CFormInput type="text" id="telephone" defaultValue={telephone} valid required onChange={handleChange} />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="text" name="telephone" value={formValues.telephone} valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
+            <CFormFeedback>{formErrors.telephone}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="roleUpdated">Roles</CFormLabel>
-            <CFormSelect id="roleUpdated" invalid onChange={handleChange}>
-              <option value="null">Choose...</option>
-              <option value="USER">USER</option>
-              <option value="ADMIN">ADMIN</option>
+            <CFormLabel htmlFor="roles">Roles</CFormLabel>
+            <CFormSelect id="roles" onChange={handleChange}>
+              <option value="null" invalid="true">
+                Choose...
+              </option>
+              <option value="USER" valid="true">
+                USER
+              </option>
+              <option value="ADMIN" valid="tre">
+                ADMIN
+              </option>
             </CFormSelect>
-            <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="password">Password</CFormLabel>
-            <CFormInput type="password" id="password" valid onChange={handleChange} placeholder="not obligatory" />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="password" name="password" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} onChange={handleChange} placeholder="not obligatory" />
+            <CFormFeedback>{formErrors.password}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel>Confirm Password</CFormLabel>
-            <CFormInput type="password" id="cPassword" valid onChange={handleChange} />
-            <CFormFeedback valid>Looks good!</CFormFeedback>
+            <CFormInput type="password" name="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} onChange={handleChange} />
+            <CFormFeedback>{formErrors.password}</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

@@ -39,6 +39,28 @@ const AddNewPatient = (props) => {
   const changeError = (isVisible) => {
     setError(isVisible)
   }
+  const validate = (values) => {
+    const errors = {}
+    if (!values.nom) {
+      errors.nom = 'Name is required'
+    }
+    if (!values.email) {
+      errors.email = 'Email is required'
+    }
+    if (!values.telephone) {
+      errors.telephone = 'Phone number is required'
+    }
+    if (!values.genre) {
+      errors.genre = 'Gender is required'
+    }
+    if (values.telephone.length < 9) {
+      errors.telephone = 'Phone number is not correct'
+    }
+    if (!values.typePatient) {
+      errors.password = 'Type Patient must is required'
+    }
+    return errors
+  }
   return (
     <CRow>
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
@@ -52,20 +74,20 @@ const AddNewPatient = (props) => {
             <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
               <CCol md={4}>
                 <CFormLabel htmlFor="email">Email</CFormLabel>
-                <CFormInput type="email" id="email" placeholder="ahlam@gmail.com" valid required onChange={handleChange} />
+                <CFormInput type="email" id="email" placeholder="ahlam@gmail.com" valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
                 <CFormFeedback valid>Looks good!</CFormFeedback>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="username">Nom</CFormLabel>
                 <CInputGroup className="has-validation">
                   <CInputGroupText>@</CInputGroupText>
-                  <CFormInput type="text" id="nom" defaultValue="" aria-describedby="inputGroupPrepend03" invalid required onChange={handleChange} />
+                  <CFormInput type="text" id="nom" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
                   <CFormFeedback invalid>Please choose a username.</CFormFeedback>
                 </CInputGroup>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="genre">Genre</CFormLabel>
-                <CFormSelect id="genre" invalid onChange={handleChange}>
+                <CFormSelect id="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
                   <option disabled>Choose...</option>
                   <option value="HOMME">Homme</option>
                   <option value="FEMME">Femme</option>
@@ -74,12 +96,12 @@ const AddNewPatient = (props) => {
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
-                <CFormInput type="text" id="telephone" invalid required onChange={handleChange} />
+                <CFormInput type="text" id="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
                 <CFormFeedback invalid>Please provide a valid number.</CFormFeedback>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="typePatient">Type Patient</CFormLabel>
-                <CFormSelect id="typePatient" invalid onChange={handleChange}>
+                <CFormSelect id="typePatient" valid={formErrors.typePatient ? false : true} invalid={formErrors.typePatient ? true : false} onChange={handleChange}>
                   <option disabled>Choose...</option>
                   <option value="STAFF">STAFF</option>
                   <option value="POSTBAC">POST BAC</option>
