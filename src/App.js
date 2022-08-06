@@ -21,8 +21,8 @@ const App = () => {
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="*" name="home" element={<DefaultLayout />} />
+            <Route exact path="/" name="home" element={<DefaultLayout />} />
           </Route>
-          <Route exact path="/" name="Login Page" element={<Login />} />
           <Route exact path="/login" name="Login Page" element={<Login />} />
         </Routes>
       </Suspense>

@@ -10,15 +10,15 @@ import Cookies from 'js-cookie'
 
 const Login = () => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const initialValues = { email: null, password: null }
+  const [formValues, setFormValues] = useState(initialValues)
   const [error, setError] = useState(false)
   const [user, setUser] = useState({})
   const [success, setSuccess] = useState(false)
 
   const handleChange = (e) => {
-    if (e.target.id === 'email') setEmail(e.target.value)
-    if (e.target.id === 'password') setPassword(e.target.value)
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
   }
   const getUser = () => {
     let user = null
@@ -34,7 +34,7 @@ const Login = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    const employe = { email: email, password: password }
+    const employe = formValues
     axios
       .post('/api/login', employe)
       .then(() => {
@@ -46,9 +46,6 @@ const Login = () => {
         setError(!error)
       })
   }
-  useEffect(() => {
-    Cookies.remove('jwt')
-  }, [])
   const changeError = (isVisible) => {
     setError(isVisible)
   }
@@ -69,13 +66,13 @@ const Login = () => {
                       <p className="text-medium-emphasis">Sign In to your account</p>
                       <CInputGroup className="mb-3">
                         <CInputGroupText>@</CInputGroupText>
-                        <CFormInput placeholder="Email" autoComplete="email" id="email" onChange={handleChange} />
+                        <CFormInput placeholder="Email" autoComplete="email" name="email" onChange={handleChange} />
                       </CInputGroup>
                       <CInputGroup className="mb-4">
                         <CInputGroupText>
                           <CIcon icon={cilLockLocked} />
                         </CInputGroupText>
-                        <CFormInput type="password" placeholder="Password" autoComplete="current-password" id="password" onChange={handleChange} />
+                        <CFormInput type="password" placeholder="Password" autoComplete="current-password" name="password" onChange={handleChange} />
                       </CInputGroup>
                       <CRow>
                         <CCol xs={6}>
