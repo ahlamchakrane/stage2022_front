@@ -18,14 +18,9 @@ const AppHeaderDropdown = () => {
   const UpdateEmploye = () => {
     employe.active = false
     employe.password = null
-    axios
-      .put(`/employes/${employe.id}`, employe)
-      .then((response) => {
-        console.log(response)
-      })
-      .catch(function (error) {
-        setError(!error)
-      })
+    axios.put(`/employes/${employe.id}`, employe).catch(function (error) {
+      setError(!error)
+    })
   }
   const getEmploye = () => {
     axios

@@ -1,6 +1,4 @@
 import React from 'react'
-import AllDemandesNonTraitees from './views/demandes/AllDemandesNonTraitees'
-import AllDemandesTraitees from './views/demandes/AllDemandesTraitees'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
@@ -51,6 +49,9 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 //Deamndes
 const AllDemandes = React.lazy(() => import('./views/demandes/AllDemandesTraitees'))
+const AllDemandesNonTraitees = React.lazy(() => import('./views/demandes/AllDemandesNonTraitees'))
+const AllDemandesTraitees = React.lazy(() => import('./views/demandes/AllDemandesTraitees'))
+const AllDemandesPatient = React.lazy(() => import('./views/demandes/AllDemandesPatient'))
 //Patients
 const AllPatients = React.lazy(() => import('./views/patients/AllPatients'))
 const AddNewPatient = React.lazy(() => import('./views/patients/AddNewPatient'))
@@ -112,6 +113,7 @@ const routes = [
   { path: '/demandes', name: 'Demands', element: AllDemandes, exact: true },
   { path: '/demandes/all-demandes-traitees', name: 'All Demands traitees', element: AllDemandesTraitees },
   { path: '/demandes/all-demandes-non-traitees', name: 'All Demands non traitees', element: AllDemandesNonTraitees },
+  { path: '/demandes/all-demandes-patient/:patientId', name: 'All Demands Patient', element: AllDemandesPatient },
 ]
 
 export default routes

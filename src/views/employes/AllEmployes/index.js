@@ -88,58 +88,61 @@ const AllEmployes = (props) => {
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
-
-      <CTable align="middle" className="mb-0 border" hover responsive>
-        <CTableHead color="light">
-          <CTableRow>
-            <CTableHeaderCell className="text-center">
-              <CIcon icon={cilPeople} />
-            </CTableHeaderCell>
-            <CTableHeaderCell>Employe</CTableHeaderCell>
-            <CTableHeaderCell className="text-center">email</CTableHeaderCell>
-            <CTableHeaderCell>phone number</CTableHeaderCell>
-            <CTableHeaderCell>Activity</CTableHeaderCell>
-            <CTableHeaderCell>Action</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          {currentItems.map((item, index) => (
-            <CTableRow v-for="item in tableItems" key={index}>
-              <CTableDataCell className="text-center">
-                <CAvatar size="md" src={avatar1} status={item.active ? 'success' : 'danger'} />
-              </CTableDataCell>
-              <CTableDataCell>
-                <div>{item.username}</div>
-              </CTableDataCell>
-              <CTableDataCell>
-                <div>{item.email}</div>
-              </CTableDataCell>
-              <CTableDataCell>
-                <div>{item.telephone}</div>
-              </CTableDataCell>
-              <CTableDataCell>
-                <div>{item.active ? 'online' : 'offline '}</div>
-              </CTableDataCell>
-              <CTableDataCell>
-                <CButton
-                  color="warning"
-                  shape="rounded-pill"
-                  style={{
-                    marginRight: 5,
-                  }}
-                  onClick={() => handleUpdate(item.id)}
-                >
-                  <CIcon icon={cilEyedropper} />
-                </CButton>
-                <CButton color="danger" shape="rounded-pill" onClick={() => onClickDelete(item.id, clickDelete)}>
-                  <CIcon icon={cilTrash} />
-                </CButton>
-              </CTableDataCell>
+      {Object.keys(employes).length !== 0 ? (
+        <CTable align="middle" className="mb-0 border" hover responsive>
+          <CTableHead color="light">
+            <CTableRow>
+              <CTableHeaderCell className="text-center">
+                <CIcon icon={cilPeople} />
+              </CTableHeaderCell>
+              <CTableHeaderCell>Employe</CTableHeaderCell>
+              <CTableHeaderCell className="text-center">email</CTableHeaderCell>
+              <CTableHeaderCell>phone number</CTableHeaderCell>
+              <CTableHeaderCell>Activity</CTableHeaderCell>
+              <CTableHeaderCell>Action</CTableHeaderCell>
             </CTableRow>
-          ))}
-          {visible && <UpdateEmploye changeVisibility={changeVisibility} id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
-        </CTableBody>
-      </CTable>
+          </CTableHead>
+          <CTableBody>
+            {currentItems.map((item, index) => (
+              <CTableRow v-for="item in tableItems" key={index}>
+                <CTableDataCell className="text-center">
+                  <CAvatar size="md" src={avatar1} status={item.active ? 'success' : 'danger'} />
+                </CTableDataCell>
+                <CTableDataCell>
+                  <div>{item.username}</div>
+                </CTableDataCell>
+                <CTableDataCell>
+                  <div>{item.email}</div>
+                </CTableDataCell>
+                <CTableDataCell>
+                  <div>{item.telephone}</div>
+                </CTableDataCell>
+                <CTableDataCell>
+                  <div>{item.active ? 'online' : 'offline '}</div>
+                </CTableDataCell>
+                <CTableDataCell>
+                  <CButton
+                    color="warning"
+                    shape="rounded-pill"
+                    style={{
+                      marginRight: 5,
+                    }}
+                    onClick={() => handleUpdate(item.id)}
+                  >
+                    <CIcon icon={cilEyedropper} />
+                  </CButton>
+                  <CButton color="danger" shape="rounded-pill" onClick={() => onClickDelete(item.id, clickDelete)}>
+                    <CIcon icon={cilTrash} />
+                  </CButton>
+                </CTableDataCell>
+              </CTableRow>
+            ))}
+            {visible && <UpdateEmploye changeVisibility={changeVisibility} id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
+          </CTableBody>
+        </CTable>
+      ) : (
+        ''
+      )}
       <Pagination itemsPerPage={itemsPerPage} totalItems={employes.length} paginate={paginate} />
     </>
   )

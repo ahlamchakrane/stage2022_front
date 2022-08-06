@@ -3,10 +3,12 @@ import CIcon from '@coreui/icons-react'
 import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import Pagination from 'src/views/Pagination'
 // Containers
 
-const AllDemandesTraitees = (props) => {
+// eslint-disable-next-line react/prop-types
+const AllDemandesPatient = (props) => {
   const UpdateDemande = React.lazy(() => import('../updateDemande'))
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
@@ -23,16 +25,14 @@ const AllDemandesTraitees = (props) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(8)
 
+  let { patientId } = useParams()
   useEffect(() => {
     const list = []
     axios
-      .get('/demandes')
+      .get(`/patients/${patientId}/demandes`)
       .then((res) => {
         const demandes = res.data
-        demandes.map(async (demande) => {
-          demande.status === 'DONE' && list.push(demande)
-        })
-        setDemandes(list)
+        setDemandes(demandes)
       })
       .catch(function (error) {
         console.log(error.toJSON())
@@ -147,4 +147,4 @@ const AllDemandesTraitees = (props) => {
   )
 }
 
-export default AllDemandesTraitees
+export default AllDemandesPatient

@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 // eslint-disable-next-line no-unused-vars
-import { cilEnvelopeOpen, cilGroup, cilPeople } from '@coreui/icons'
+import { cilAddressBook, cilEnvelopeOpen, cilGroup, cilPeople } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
 const _nav = [
@@ -9,7 +9,7 @@ const _nav = [
     component: CNavGroup,
     name: 'Patients',
     to: '/patients',
-    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
