@@ -1,29 +1,35 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const AddNewPatient = (props) => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
-
-  const [nom, setNom] = useState()
-  const [email, setEmail] = useState()
-  const [telephone, setTelephone] = useState()
-  const [typePatient, setTypePatient] = useState('STAFF')
-  const [genre, setGenre] = useState('HOMME')
+  const initialValues = { nom: null, email: null, telephone: null, typePatient: 'STAFF', genre: 'HOMME' }
+  const [formValues, setFormValues] = useState(initialValues)
+  const [formErrors, setFormErrors] = useState({})
+  const [isSubmit, setIsSubmit] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
 
   const handleChange = (e) => {
-    if (e.target.id === 'nom') setNom(e.target.value)
-    if (e.target.id === 'email') setEmail(e.target.value)
-    if (e.target.id === 'telephone') setTelephone(e.target.value)
-    if (e.target.id === 'typePatient') setTypePatient(e.target.value)
-    if (e.target.id === 'genre') setGenre(e.target.value)
+    const { name, value } = e.target
+    setFormValues({ ...formValues, [name]: value })
   }
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      handleUpdate()
+    }
+  }, [formErrors])
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    const patient = { nom: nom, email: email, telephone: telephone, typePatient: typePatient, genre: genre }
+    setFormErrors(validate(formValues))
+    setIsSubmit(true)
+  }
+  const handleUpdate = (e) => {
+    setIsSubmit(false)
+    const patient = formValues
     axios
       .post('/patients', patient)
       .then(() => {
@@ -43,21 +49,22 @@ const AddNewPatient = (props) => {
     const errors = {}
     if (!values.nom) {
       errors.nom = 'Name is required'
+    } else if (values.nom.length < 2) {
+      errors.nom = 'Name length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
     }
     if (!values.telephone) {
       errors.telephone = 'Phone number is required'
+    } else if (values.telephone.length < 9) {
+      errors.telephone = 'Phone number is not correct'
     }
     if (!values.genre) {
       errors.genre = 'Gender is required'
     }
-    if (values.telephone.length < 9) {
-      errors.telephone = 'Phone number is not correct'
-    }
     if (!values.typePatient) {
-      errors.password = 'Type Patient must is required'
+      errors.typePatient = 'Type Patient must is required'
     }
     return errors
   }
@@ -74,39 +81,39 @@ const AddNewPatient = (props) => {
             <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
               <CCol md={4}>
                 <CFormLabel htmlFor="email">Email</CFormLabel>
-                <CFormInput type="email" id="email" placeholder="ahlam@gmail.com" valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
-                <CFormFeedback valid>Looks good!</CFormFeedback>
+                <CFormInput type="email" name="email" placeholder="test@gmail.com" valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
+                <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
               </CCol>
               <CCol md={4}>
-                <CFormLabel htmlFor="username">Nom</CFormLabel>
+                <CFormLabel htmlFor="nom">Nom</CFormLabel>
                 <CInputGroup className="has-validation">
                   <CInputGroupText>@</CInputGroupText>
-                  <CFormInput type="text" id="nom" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
-                  <CFormFeedback invalid>Please choose a username.</CFormFeedback>
+                  <CFormInput type="text" name="nom" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
+                  <CFormFeedback invalid>{formErrors.nom}</CFormFeedback>
                 </CInputGroup>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="genre">Genre</CFormLabel>
-                <CFormSelect id="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
+                <CFormSelect name="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
                   <option disabled>Choose...</option>
                   <option value="HOMME">Homme</option>
                   <option value="FEMME">Femme</option>
                 </CFormSelect>
-                <CFormFeedback invalid>Please provide a valid gender.</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.genre}</CFormFeedback>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
-                <CFormInput type="text" id="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
-                <CFormFeedback invalid>Please provide a valid number.</CFormFeedback>
+                <CFormInput type="text" name="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
+                <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
               </CCol>
               <CCol md={4}>
                 <CFormLabel htmlFor="typePatient">Type Patient</CFormLabel>
-                <CFormSelect id="typePatient" valid={formErrors.typePatient ? false : true} invalid={formErrors.typePatient ? true : false} onChange={handleChange}>
+                <CFormSelect name="typePatient" valid={formErrors.typePatient ? false : true} invalid={formErrors.typePatient ? true : false} onChange={handleChange}>
                   <option disabled>Choose...</option>
                   <option value="STAFF">STAFF</option>
                   <option value="POSTBAC">POST BAC</option>
                 </CFormSelect>
-                <CFormFeedback invalid>Please provide a valid type.</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.typePatient}</CFormFeedback>
               </CCol>
               <CCol xs={12}>
                 <CButton color="primary" type="submit">

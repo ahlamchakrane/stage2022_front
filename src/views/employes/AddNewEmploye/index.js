@@ -27,7 +27,7 @@ const AddNewEmploye = (props) => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleUpdate()
     }
-  }, [roles, formErrors, success, error])
+  }, [roles, formErrors])
 
   const getRoles = () => {
     const obj = { id: null, nom: null }
@@ -76,6 +76,8 @@ const AddNewEmploye = (props) => {
     const errors = {}
     if (!values.username) {
       errors.username = 'Username is required'
+    } else if (values.username.length < 3) {
+      errors.username = 'Username length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
@@ -125,22 +127,22 @@ const AddNewEmploye = (props) => {
                   <option value="HOMME">Homme</option>
                   <option value="Femme">Femme</option>
                 </CFormSelect>
-                <CFormFeedback>{formErrors.genre}</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.genre}</CFormFeedback>
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="password">Password</CFormLabel>
                 <CFormInput type="password" name="password" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
-                <CFormFeedback>{formErrors.password}</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="cPassword">Repeat Password</CFormLabel>
                 <CFormInput type="password" id="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
-                <CFormFeedback>{formErrors.password}</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
                 <CFormInput type="text" name="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
-                <CFormFeedback>{formErrors.telephone}</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
               </CCol>
               <CCol md={3}>
                 <CFormLabel htmlFor="roles">Role</CFormLabel>
@@ -149,7 +151,7 @@ const AddNewEmploye = (props) => {
                   <option value="USER">USER</option>
                   <option value="ADMIN">ADMIN</option>
                 </CFormSelect>
-                <CFormFeedback>{formErrors.role}</CFormFeedback>
+                <CFormFeedback invalid>{formErrors.role}</CFormFeedback>
               </CCol>
               <CCol xs={12}>
                 <CButton color="primary" type="submit">

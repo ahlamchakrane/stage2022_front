@@ -68,14 +68,15 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     const errors = {}
     if (!values.username) {
       errors.username = 'Username is required'
+    } else if (values.username.length < 3) {
+      errors.username = 'Username length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
     }
     if (!values.telephone) {
       errors.telephone = 'Phone number is required'
-    }
-    if (values.telephone.length < 9) {
+    } else if (values.telephone.length < 9) {
       errors.telephone = 'Phone number is not correct'
     }
     if (values.password && values.password.length < 6) {
@@ -93,41 +94,36 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
           <CCol md={5}>
             <CFormLabel htmlFor="username">Username</CFormLabel>
             <CFormInput type="text" name="username" value={formValues.username} valid={formErrors.username ? false : true} invalid={formErrors.username ? true : false} required onChange={handleChange} />
-            <CFormFeedback>{formErrors.username}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.username}</CFormFeedback>
           </CCol>
           <CCol md={7}>
             <CFormLabel htmlFor="email">email</CFormLabel>
             <CFormInput type="email" name="email" value={formValues.email} valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
-            <CFormFeedback>{formErrors.email}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
             <CFormInput type="text" name="telephone" value={formValues.telephone} valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
-            <CFormFeedback>{formErrors.telephone}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="roles">Roles</CFormLabel>
-            <CFormSelect id="roles" onChange={handleChange}>
-              <option value="null" invalid="true">
-                Choose...
-              </option>
-              <option value="USER" valid="true">
-                USER
-              </option>
-              <option value="ADMIN" valid="tre">
-                ADMIN
-              </option>
+            <CFormSelect id="roles" onChange={handleChange} valid>
+              <option value="null">Choose...</option>
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
             </CFormSelect>
+            <CFormFeedback valid>Ignoring this field, means keeping the old value</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="password">Password</CFormLabel>
             <CFormInput type="password" name="password" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} onChange={handleChange} placeholder="not obligatory" />
-            <CFormFeedback>{formErrors.password}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel>Confirm Password</CFormLabel>
             <CFormInput type="password" name="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} onChange={handleChange} />
-            <CFormFeedback>{formErrors.password}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

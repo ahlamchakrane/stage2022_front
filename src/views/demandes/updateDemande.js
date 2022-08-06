@@ -55,7 +55,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
           <CCol md={7}>
             <CFormLabel htmlFor="date">Date</CFormLabel>
             <CFormInput type="text" name="date" value={formValues.date} valid={formErrors.date ? false : true} invalid={formErrors.date ? true : false} required onChange={handleChange} />
-            <CFormFeedback>{formErrors.date}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.date}</CFormFeedback>
           </CCol>
           <CCol md={5}>
             <CFormLabel htmlFor="status">Status</CFormLabel>
@@ -65,7 +65,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
               <option value="PENDING">PENDING</option>
               <option value="DONE">DONE</option>
             </CFormSelect>
-            <CFormFeedback>{formErrors.status}</CFormFeedback>
+            <CFormFeedback invalid>{formErrors.status}</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>
