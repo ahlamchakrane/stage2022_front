@@ -16,11 +16,6 @@ const _nav = [
         name: 'All Patients',
         to: '/patients/all-patients',
       },
-      {
-        component: CNavItem,
-        name: 'New Patient',
-        to: '/patients/add-new-patient',
-      },
     ],
   },
   {
@@ -33,11 +28,6 @@ const _nav = [
         component: CNavItem,
         name: 'All Employes',
         to: '/employes/all-employes',
-      },
-      {
-        component: CNavItem,
-        name: 'New Employe',
-        to: '/employes/add-new-employe',
       },
     ],
   },

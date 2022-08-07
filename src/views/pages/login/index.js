@@ -13,24 +13,13 @@ const Login = () => {
   const initialValues = { email: null, password: null }
   const [formValues, setFormValues] = useState(initialValues)
   const [error, setError] = useState(false)
-  const [user, setUser] = useState({})
   const [success, setSuccess] = useState(false)
+  const [user, setUser] = useState()
+  const [roles, setRoles] = useState([])
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
-  }
-  const getUser = () => {
-    let user = null
-    axios
-      .get('api/employe')
-      .then((response) => {
-        user = response.data
-      })
-      .catch(function (error) {
-        setError(!error)
-      })
-    setUser(user)
   }
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -40,7 +29,6 @@ const Login = () => {
       .then(() => {
         setSuccess(!success)
         navigate('/dashboard')
-        getUser()
       })
       .catch(function (error) {
         setError(!error)

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { CAvatar, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
-import { cilLockLocked } from '@coreui/icons'
+import { cilAccountLogout, cilLockLocked } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios'
 
-import avatar8 from './../../assets/images/avatars/8.jpg'
 import ModalError from 'src/views/modals/modalError'
 import { useNavigate } from 'react-router-dom'
-import Cookies from 'js-cookie'
-import UpdateEmploye from 'src/views/employes/updateEmploye'
 
 const AppHeaderDropdown = () => {
   const [error, setError] = useState(false)
@@ -55,14 +52,8 @@ const AppHeaderDropdown = () => {
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       <CDropdown variant="nav-item">
         <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-          <CAvatar src={avatar8} size="md" />
+          <CIcon icon={cilAccountLogout} size="lg" onClick={() => logout()} />
         </CDropdownToggle>
-        <CDropdownMenu className="pt-0" placement="bottom-end">
-          <CDropdownItem onClick={() => logout()}>
-            <CIcon icon={cilLockLocked} className="me-2" />
-            Log out
-          </CDropdownItem>
-        </CDropdownMenu>
       </CDropdown>
     </>
   )

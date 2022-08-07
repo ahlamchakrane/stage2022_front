@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { cilDescription, cilEyedropper, cilFolderOpen, cilPeople, cilTrash } from '@coreui/icons'
+import { cilDescription, cilEyedropper, cilFolderOpen, cilPeople, cilSearch, cilTrash, cilUserPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CButton, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
-import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 // Containers
 
@@ -14,7 +14,7 @@ const AllPatients = (props) => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
-  const AllDemandesPatient = React.lazy(() => import('src/views/demandes/AllDemandesPatient'))
+  const AddNewPatient = React.lazy(() => import('../AddNewPatient'))
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState([])
   const [visible, setVisible] = useState(false)
@@ -23,10 +23,23 @@ const AllPatients = (props) => {
   const [clickDelete, setClickDelete] = useState(false)
   const [id, setId] = useState(false)
   const [getDemandes, setGetDemandes] = useState(false)
+  const [clickAdd, setClickAdd] = useState(false)
+  const [user, setUser] = useState({})
+  const [roles, setRoles] = useState([])
+  const [isDisplayed, setIsDisplayed] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(8)
+  const [itemsPerPage] = useState(10)
   useEffect(() => {
+    setInterval(() => {
+      setIsDisplayed(true)
+    }, 600)
+    getUser()
+    getAllPatients()
+  }, [])
+  const getAllPatients = () => {
     axios
       .get('/patients')
       .then((res) => {
@@ -34,29 +47,65 @@ const AllPatients = (props) => {
         setPatients(patients)
       })
       .catch(function () {})
-  }, [])
-
-  const deletePatient = (id) => {
+  }
+  async function getUser() {
     axios
-      .delete(`/patients/${id}`)
+      .get('/api/employe')
       .then((res) => {
-        setSuccess(!success)
+        const id = res.data.id
+        setUser(res.data)
+        getRolesUser(id)
       })
       .catch(function (error) {
-        setError(!error)
+        console.log(error)
       })
   }
-  const handleUpdate = (id) => {
+  async function getRolesUser(id) {
     axios
-      .get(`/patients/${id}`)
+      .get(`/employes/${id}/roles`)
       .then((res) => {
-        const patient = res.data
-        setVisible(!visible)
-        setPatient(patient)
+        const roles = res.data
+        if (roles) {
+          for (let i = 0; i < roles.length; i++) {
+            if (roles[i].nom === 'ADMIN') {
+              setRoles('ADMIN')
+              return
+            } else if (roles[i].nom === 'USER') {
+              setRoles('USER')
+              return
+            }
+          }
+        }
       })
       .catch(function (error) {
-        console.log(error.toJSON())
+        console.log(error)
       })
+  }
+  const deletePatient = (id) => {
+    roles === 'ADMIN'
+      ? axios
+          .delete(`/patients/${id}`)
+          .then((res) => {
+            setSuccess(!success)
+          })
+          .catch(function (error) {
+            setError(!error)
+          })
+      : setError(!error)
+  }
+  const handleUpdate = (id) => {
+    roles === 'ADMIN'
+      ? axios
+          .get(`/patients/${id}`)
+          .then((res) => {
+            const patient = res.data
+            setVisible(!visible)
+            setPatient(patient)
+          })
+          .catch(function (error) {
+            setError(!error)
+          })
+      : setError(!error)
   }
   const changeVisibility = (isVisible) => {
     setVisible(isVisible)
@@ -79,6 +128,14 @@ const AllPatients = (props) => {
     if (confirmation) deletePatient(id)
     setClickDelete(false)
   }
+  const onClickAdd = () => {
+    setClickAdd(true)
+  }
+  const changeClickAdd = (error, success) => {
+    setClickAdd(false)
+    setError(error)
+    setSuccess(success)
+  }
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -93,80 +150,126 @@ const AllPatients = (props) => {
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {getDemandes && <Navigate replace to={`/demandes/all-demandes-patient/${id}`} />}
-      {Object.keys(patients).length !== 0 ? (
-        <CTable align="middle" className="mb-0 border" hover responsive>
-          <CTableHead color="light">
-            <CTableRow>
-              <CTableHeaderCell className="text-center">
-                <CIcon icon={cilPeople} />
-              </CTableHeaderCell>
-              <CTableHeaderCell>Patients</CTableHeaderCell>
-              <CTableHeaderCell className="text-center">email</CTableHeaderCell>
-              <CTableHeaderCell>Phone number</CTableHeaderCell>
-              <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {currentItems.map((item, index) => (
-              <CTableRow v-for="item in tableItems" key={index}>
-                <CTableDataCell className="text-center">
-                  <span>#{item.id}</span>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <div>{item.nom}</div>
-                  <div className="small text-medium-emphasis">
-                    <span>{item.typePatient}</span>
-                  </div>
-                </CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <div>{item.email}</div>
-                </CTableDataCell>
-                <CTableDataCell className="text-center">
-                  <div>{item.telephone}</div>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <CButton
-                    color="info"
-                    shape="rounded-pill"
-                    style={{
-                      marginRight: 5,
-                    }}
-                  >
-                    <CIcon icon={cilDescription} />
-                  </CButton>
-                  <CButton
-                    color="warning"
-                    shape="rounded-pill"
-                    style={{
-                      marginRight: 5,
-                    }}
-                    onClick={() => handleUpdate(item.id)}
-                  >
-                    <CIcon icon={cilEyedropper} />
-                  </CButton>
-                  <CButton
-                    color="danger"
-                    shape="rounded-pill"
-                    style={{
-                      marginRight: 5,
-                    }}
-                    onClick={() => onClickDelete(item.id, clickDelete)}
-                  >
-                    <CIcon icon={cilTrash} />
-                  </CButton>
-                  <CButton color="success" shape="rounded-pill" onClick={() => getListDemandes(item.id)}>
-                    <CIcon icon={cilFolderOpen} />
-                  </CButton>
-                </CTableDataCell>
+      {clickAdd && <AddNewPatient changeVisibility={changeClickAdd} />}
+      {isDisplayed ? (
+        <>
+          <CCol md={6}>
+            <CInputGroup className="has-validation">
+              <CInputGroupText
+                style={{
+                  backgroundColor: '#3C4B64',
+                  color: '#fff',
+                }}
+              >
+                <CIcon icon={cilSearch} />
+              </CInputGroupText>
+              <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
+              <CInputGroupText
+                style={{
+                  backgroundColor: '#3C4B64',
+                  color: '#fff',
+                }}
+              >
+                Search
+              </CInputGroupText>
+            </CInputGroup>
+          </CCol>
+          <br />
+          <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTableHead color="light">
+              <CTableRow>
+                <CTableHeaderCell className="text-center">
+                  {roles === 'ADMIN' && (
+                    <CButton
+                      color="primary"
+                      shape="rounded-pill"
+                      style={{
+                        margin: 5,
+                      }}
+                      onClick={() => onClickAdd()}
+                    >
+                      <CIcon icon={cilUserPlus} />
+                    </CButton>
+                  )}
+                </CTableHeaderCell>
+                <CTableHeaderCell>Patients</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">email</CTableHeaderCell>
+                <CTableHeaderCell>Phone number</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
               </CTableRow>
-            ))}
-            {visible && <UpdatePatient changeVisibility={changeVisibility} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
-          </CTableBody>
-        </CTable>
+            </CTableHead>
+            <CTableBody>
+              {currentItems
+                .filter((patient) => patient.nom.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((item, index) => (
+                  <CTableRow v-for="item in tableItems" key={index}>
+                    <CTableDataCell className="text-center">
+                      <span>#{item.id}</span>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <div>{item.nom}</div>
+                      <div className="small text-medium-emphasis">
+                        <span>{item.typePatient}</span>
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <div>{item.email}</div>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <div>{item.telephone}</div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <CButton
+                        color="info"
+                        shape="rounded-pill"
+                        style={{
+                          marginRight: 5,
+                        }}
+                      >
+                        <CIcon icon={cilDescription} />
+                      </CButton>
+                      {roles === 'ADMIN' && (
+                        <>
+                          <CButton
+                            color="warning"
+                            shape="rounded-pill"
+                            style={{
+                              marginRight: 5,
+                            }}
+                            onClick={() => handleUpdate(item.id)}
+                          >
+                            <CIcon icon={cilEyedropper} />
+                          </CButton>
+                          <CButton
+                            color="danger"
+                            shape="rounded-pill"
+                            style={{
+                              marginRight: 5,
+                            }}
+                            onClick={() => onClickDelete(item.id, clickDelete)}
+                          >
+                            <CIcon icon={cilTrash} />
+                          </CButton>
+                        </>
+                      )}
+                      <CButton color="success" shape="rounded-pill" onClick={() => getListDemandes(item.id)}>
+                        <CIcon icon={cilFolderOpen} />
+                      </CButton>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))}
+              {visible && <UpdatePatient changeVisibility={changeVisibility} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
+            </CTableBody>
+          </CTable>
+          <Pagination itemsPerPage={itemsPerPage} totalItems={patients.length} paginate={paginate} />
+        </>
       ) : (
-        ''
+        <div className="d-flex justify-content-center">
+          <div className="spinner-grow text-warning" role="status">
+            <span className="sr-only"></span>
+          </div>
+        </div>
       )}
-      <Pagination itemsPerPage={itemsPerPage} totalItems={patients.length} paginate={paginate} />
     </>
   )
 }

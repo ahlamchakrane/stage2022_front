@@ -12,12 +12,12 @@ const loading = (
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 // Pages
-const Login = React.lazy(() => import('./views/pages/login/Login'))
+const Login = React.lazy(() => import('./views/pages/login'))
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={loading}>
+      <Suspense>
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="*" name="home" element={<DefaultLayout />} />

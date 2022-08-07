@@ -1,13 +1,11 @@
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CInputGroup, CInputGroupText, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 // Containers
 
-const AddNewEmploye = (props) => {
-  const ModalError = React.lazy(() => import('src/views/modals/modalError'))
-  const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
-
+// eslint-disable-next-line react/prop-types
+const AddNewEmploye = ({ changeVisibility }) => {
   const initialValues = { username: null, email: null, telephone: null, password: null, genre: 'HOMME' }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
@@ -27,7 +25,8 @@ const AddNewEmploye = (props) => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleUpdate()
     }
-  }, [roles, formErrors])
+    if (error !== false || success !== false) close(error, success)
+  }, [roles, formErrors, error, success])
 
   const getRoles = () => {
     const obj = { id: null, nom: null }
@@ -66,12 +65,6 @@ const AddNewEmploye = (props) => {
     setFormErrors(validate(formValues))
     setIsSubmit(true)
   }
-  const changeSuccess = (isVisible) => {
-    setSuccess(isVisible)
-  }
-  const changeError = (isVisible) => {
-    setError(isVisible)
-  }
   const validate = (values) => {
     const errors = {}
     if (!values.username) {
@@ -96,73 +89,74 @@ const AddNewEmploye = (props) => {
     }
     return errors
   }
+  const close = (error, success) => {
+    changeVisibility(error, success)
+  }
   return (
-    <CRow>
-      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
-      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>New</strong> <small>Employe</small>
-          </CCardHeader>
-          <CCardBody>
-            <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
-              <CCol md={4}>
-                <CFormLabel htmlFor="email">Email</CFormLabel>
-                <CFormInput type="text" name="email" placeholder="ahlam@gmail.com" valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
-                <CFormFeedback>{formErrors.email}</CFormFeedback>
-              </CCol>
-              <CCol md={4}>
-                <CFormLabel htmlFor="username">Username</CFormLabel>
-                <CInputGroup className="has-validation">
-                  <CInputGroupText>@</CInputGroupText>
-                  <CFormInput type="text" name="username" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.username ? false : true} invalid={formErrors.username ? true : false} required onChange={handleChange} />
-                  <CFormFeedback>{formErrors.username}</CFormFeedback>
-                </CInputGroup>
-              </CCol>
-              <CCol md={4}>
-                <CFormLabel htmlFor="genre">Genre</CFormLabel>
-                <CFormSelect name="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
-                  <option disabled>Choose...</option>
-                  <option value="HOMME">Homme</option>
-                  <option value="Femme">Femme</option>
-                </CFormSelect>
-                <CFormFeedback invalid>{formErrors.genre}</CFormFeedback>
-              </CCol>
-              <CCol md={3}>
-                <CFormLabel htmlFor="password">Password</CFormLabel>
-                <CFormInput type="password" name="password" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
-                <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
-              </CCol>
-              <CCol md={3}>
-                <CFormLabel htmlFor="cPassword">Repeat Password</CFormLabel>
-                <CFormInput type="password" id="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
-                <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
-              </CCol>
-              <CCol md={3}>
-                <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
-                <CFormInput type="text" name="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
-                <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
-              </CCol>
-              <CCol md={3}>
-                <CFormLabel htmlFor="roles">Role</CFormLabel>
-                <CFormSelect name="roles" valid onChange={handleChange}>
-                  <option disabled>Choose...</option>
-                  <option value="USER">USER</option>
-                  <option value="ADMIN">ADMIN</option>
-                </CFormSelect>
-                <CFormFeedback invalid>{formErrors.role}</CFormFeedback>
-              </CCol>
-              <CCol xs={12}>
-                <CButton color="primary" type="submit">
-                  Submit
-                </CButton>
-              </CCol>
-            </CForm>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+    <CModal alignment="center" visible={true} onClose={() => close()}>
+      <CModalHeader
+        style={{
+          backgroundColor: '#5eb85e',
+        }}
+      >
+        <CModalTitle>Add</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
+          <CCol md={6}>
+            <CFormLabel htmlFor="email">Email</CFormLabel>
+            <CFormInput type="text" name="email" placeholder="test@gmail.com" valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="username">Username</CFormLabel>
+            <CInputGroup className="has-validation">
+              <CInputGroupText>@</CInputGroupText>
+              <CFormInput type="text" name="username" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.username ? false : true} invalid={formErrors.username ? true : false} required onChange={handleChange} />
+              <CFormFeedback invalid>{formErrors.username}</CFormFeedback>
+            </CInputGroup>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="telephone">Phone number</CFormLabel>
+            <CFormInput type="text" name="telephone" valid={formErrors.telephone ? false : true} invalid={formErrors.telephone ? true : false} required onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="genre">Genre</CFormLabel>
+            <CFormSelect name="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
+              <option disabled>Choose...</option>
+              <option value="HOMME">Homme</option>
+              <option value="Femme">Femme</option>
+            </CFormSelect>
+            <CFormFeedback invalid>{formErrors.genre}</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="password">Password</CFormLabel>
+            <CFormInput type="password" name="password" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="cPassword">Repeat Password</CFormLabel>
+            <CFormInput type="password" id="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
+          </CCol>
+          <CCol md={6}>
+            <CFormLabel htmlFor="roles">Role</CFormLabel>
+            <CFormSelect name="roles" valid onChange={handleChange}>
+              <option disabled>Choose...</option>
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </CFormSelect>
+            <CFormFeedback invalid>{formErrors.role}</CFormFeedback>
+          </CCol>
+          <CModalFooter>
+            <CButton color="success" type="submit">
+              Submit
+            </CButton>
+          </CModalFooter>
+        </CForm>
+      </CModalBody>
+    </CModal>
   )
 }
 
