@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import Pagination from 'src/views/Pagination'
+import Cookies from 'js-cookie'
 
 // Containers
 
@@ -22,24 +23,22 @@ const AllDemandesPatient = (props) => {
   const [error, setError] = useState(false)
   const [clickDelete, setClickDelete] = useState(false)
   const [id, setId] = useState(false)
-  const [user, setUser] = useState({})
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage] = useState(10)
 
   let { patientId } = useParams()
   useEffect(() => {
     setInterval(() => {
       setIsDisplayed(true)
-    }, 600)
-    getUser()
+    }, 700)
+    setRoles(Cookies.get('ROLE'))
     getDemandesPatient()
-  }, [])
+  })
   const getDemandesPatient = () => {
-    const list = []
     axios
       .get(`/patients/${patientId}/demandes`)
       .then((res) => {
@@ -48,39 +47,6 @@ const AllDemandesPatient = (props) => {
       })
       .catch(function (error) {
         console.log(error.toJSON())
-      })
-  }
-  async function getUser() {
-    axios
-      .get('/api/employe')
-      .then((res) => {
-        const id = res.data.id
-        setUser(res.data)
-        getRolesUser(id)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  async function getRolesUser(id) {
-    axios
-      .get(`/employes/${id}/roles`)
-      .then((res) => {
-        const roles = res.data
-        if (roles) {
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === 'ADMIN') {
-              setRoles('ADMIN')
-              return
-            } else if (roles[i].nom === 'USER') {
-              setRoles('USER')
-              return
-            }
-          }
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
       })
   }
   const deleteDemande = (id) => {

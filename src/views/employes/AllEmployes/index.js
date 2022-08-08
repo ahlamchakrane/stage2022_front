@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { cilEyedropper, cilPeople, cilSearch, cilTrash, cilUserPlus } from '@coreui/icons'
+import { cilEyedropper, cilSearch, cilTrash, cilUserPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
 import AddNewEmploye from '../AddNewEmploye'
+import Cookies from 'js-cookie'
 // Containers
 
 const AllEmployes = (props) => {
@@ -28,14 +29,14 @@ const AllEmployes = (props) => {
   const [searchTerm, setSearchTerm] = useState('')
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage] = useState(10)
   useEffect(() => {
     setInterval(() => {
       setIsDisplayed(true)
-    }, 600)
-    getUser()
+    }, 700)
+    setRoles(Cookies.get('ROLE'))
     getAllEmployes()
-  }, [])
+  })
   const getAllEmployes = () => {
     axios
       .get('/employes')
@@ -47,39 +48,7 @@ const AllEmployes = (props) => {
         console.log(error.toJSON())
       })
   }
-  async function getUser() {
-    axios
-      .get('/api/employe')
-      .then((res) => {
-        const id = res.data.id
-        setUser(res.data)
-        getRolesUser(id)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  async function getRolesUser(id) {
-    axios
-      .get(`/employes/${id}/roles`)
-      .then((res) => {
-        const roles = res.data
-        if (roles) {
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === 'ADMIN') {
-              setRoles('ADMIN')
-              return
-            } else if (roles[i].nom === 'USER') {
-              setRoles('USER')
-              return
-            }
-          }
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
+
   const deleteEmploye = (id) => {
     roles === 'ADMIN'
       ? axios

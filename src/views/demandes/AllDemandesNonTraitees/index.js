@@ -4,6 +4,7 @@ import { CButton, CCol, CForm, CFormInput, CInputGroup, CInputGroupText, CTable,
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
+import Cookies from 'js-cookie'
 // Containers
 
 const AllDemandesNonTraitees = () => {
@@ -30,8 +31,8 @@ const AllDemandesNonTraitees = () => {
   useEffect(() => {
     setInterval(() => {
       setIsDisplayed(true)
-    }, 600)
-    getUser()
+    }, 700)
+    setRoles(Cookies.get('ROLE'))
     getDemandes()
   })
   const getDemandes = () => {
@@ -40,45 +41,13 @@ const AllDemandesNonTraitees = () => {
       .get('/demandes')
       .then((res) => {
         const demandes = res.data
-        demandes.map(async (demande) => {
+        demandes.map((demande) => {
           demande.status !== 'DONE' && list.push(demande)
         })
         setDemandes(list)
       })
       .catch(function (error) {
         console.log(error.toJSON())
-      })
-  }
-  async function getUser() {
-    axios
-      .get('/api/employe')
-      .then((res) => {
-        const id = res.data.id
-        getRolesUser(id)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  async function getRolesUser(id) {
-    axios
-      .get(`/employes/${id}/roles`)
-      .then((res) => {
-        const roles = res.data
-        if (roles) {
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === 'ADMIN') {
-              setRoles('ADMIN')
-              return
-            } else if (roles[i].nom === 'USER') {
-              setRoles('USER')
-              return
-            }
-          }
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
       })
   }
   const deleteDemande = (id) => {

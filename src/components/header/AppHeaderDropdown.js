@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { CAvatar, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle } from '@coreui/react'
-import { cilAccountLogout, cilLockLocked } from '@coreui/icons'
+import { CDropdown, CDropdownToggle } from '@coreui/react'
+import { cilAccountLogout } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios'
 
 import ModalError from 'src/views/modals/modalError'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 const AppHeaderDropdown = () => {
   const [error, setError] = useState(false)
@@ -35,6 +36,7 @@ const AppHeaderDropdown = () => {
   }, [])
   const logout = () => {
     UpdateEmploye()
+    Cookies.remove('ROLE')
     axios
       .post('/api/logout')
       .then(() => {

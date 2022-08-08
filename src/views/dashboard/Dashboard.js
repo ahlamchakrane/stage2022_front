@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-import { CButton, CButtonGroup, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CProgress, CRow } from '@coreui/react'
-import { CChartBar, CChartDoughnut, CChartLine, CChartPie, CChartPolarArea } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
-import CIcon from '@coreui/icons-react'
-import { cilCloudDownload } from '@coreui/icons'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { CChartPie, CChartPolarArea } from '@coreui/react-chartjs'
 import axios from 'axios'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
-  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
   const [demandes, setDemandes] = useState()
   const [patients, setPatients] = useState()
   const [employes, setEmployes] = useState()
@@ -19,13 +15,14 @@ const Dashboard = () => {
   const [done, setDone] = useState()
   const [femme, setFemme] = useState()
   const [homme, setHomme] = useState()
+  const [isDisplayed, setIsDisplayed] = useState(false)
   const [staff, setStaff] = useState()
   const [postBac, setPostBac] = useState()
-  const getNbrDemandesPatient = () => {}
-  const getGenrePatient = () => {
+
+  async function getGenrePatient() {
     let femmes = 0
     let hommes = 0
-    axios
+    await axios
       .get(`/patients`)
       .then((res) => {
         for (const dataObj of res.data) {
@@ -42,9 +39,9 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  const getEmployes = () => {
+  async function getEmployes() {
     let lengthEmploye = 0
-    axios
+    await axios
       .get(`/employes`)
       .then((res) => {
         lengthEmploye = res.data.length
@@ -56,11 +53,11 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  const getTypePatient = () => {
+  async function getTypePatient() {
     let staff = 0
     let postBac = 0
     let lengthPatient = 0
-    axios
+    await axios
       .get(`/patients`)
       .then((res) => {
         lengthPatient = res.data.length
@@ -81,12 +78,12 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  const getStatusDemandes = () => {
+  async function getStatusDemandes() {
     let nbrPending = 0
     let nbrDone = 0
     let nbrCanceled = 0
     let lengthDemandes = 0
-    axios
+    await axios
       .get(`/demandes`)
       .then((res) => {
         lengthDemandes = res.data.length
@@ -111,7 +108,9 @@ const Dashboard = () => {
       })
   }
   useEffect(() => {
-    getNbrDemandesPatient()
+    setInterval(() => {
+      setIsDisplayed(true)
+    }, 800)
     getStatusDemandes()
     getGenrePatient()
     getTypePatient()
@@ -119,83 +118,93 @@ const Dashboard = () => {
   }, [])
   return (
     <>
-      <WidgetsDropdown demandes={demandes} patients={patients} employes={employes} />
-      <CRow>
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader>En chiffres</CCardHeader>
-            <CCardBody>
-              <CChartPolarArea
-                data={{
-                  labels: ['DEMANDES', 'EMPLOYES', 'PATIENTS'],
-                  datasets: [
-                    {
-                      data: [demandes, employes, patients],
-                      backgroundColor: ['#cadefc', '#dfd3c3', '#cca8e9'],
-                    },
-                  ],
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader>Types Patients</CCardHeader>
-            <CCardBody>
-              <CChartPolarArea
-                data={{
-                  labels: ['DONE', 'CANCELED', 'PENDING'],
-                  datasets: [
-                    {
-                      data: [done, canceled, pending],
-                      backgroundColor: ['#efd510', '#4BC0C0', '#cecece'],
-                    },
-                  ],
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader>Status Demandes</CCardHeader>
-            <CCardBody>
-              <CChartPie
-                data={{
-                  labels: ['POSTBAC', 'STAFF'],
-                  datasets: [
-                    {
-                      data: [postBac, staff],
-                      backgroundColor: ['#e1ffcf', '#e3c878'],
-                      hoverBackgroundColor: ['#49beb7', '#de703c'],
-                    },
-                  ],
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol xs={6}>
-          <CCard className="mb-4">
-            <CCardHeader>Genre</CCardHeader>
-            <CCardBody>
-              <CChartPie
-                data={{
-                  labels: ['FEMME', 'HOMME'],
-                  datasets: [
-                    {
-                      data: [femme, homme],
-                      backgroundColor: ['#efd510', '#acc6aa'],
-                      hoverBackgroundColor: ['#ecffa3', '#79d1c3'],
-                    },
-                  ],
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+      {isDisplayed ? (
+        <>
+          <WidgetsDropdown demandes={demandes} patients={patients} employes={employes} />
+          <CRow>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardHeader>En chiffres</CCardHeader>
+                <CCardBody>
+                  <CChartPolarArea
+                    data={{
+                      labels: ['DEMANDES', 'EMPLOYES', 'PATIENTS'],
+                      datasets: [
+                        {
+                          data: [demandes, employes, patients],
+                          backgroundColor: ['#cadefc', '#dfd3c3', '#cca8e9'],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardHeader>Types Patients</CCardHeader>
+                <CCardBody>
+                  <CChartPolarArea
+                    data={{
+                      labels: ['DONE', 'CANCELED', 'PENDING'],
+                      datasets: [
+                        {
+                          data: [done, canceled, pending],
+                          backgroundColor: ['#efd510', '#4BC0C0', '#cecece'],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardHeader>Status Demandes</CCardHeader>
+                <CCardBody>
+                  <CChartPie
+                    data={{
+                      labels: ['POSTBAC', 'STAFF'],
+                      datasets: [
+                        {
+                          data: [postBac, staff],
+                          backgroundColor: ['#e1ffcf', '#e3c878'],
+                          hoverBackgroundColor: ['#49beb7', '#de703c'],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs={6}>
+              <CCard className="mb-4">
+                <CCardHeader>Genre</CCardHeader>
+                <CCardBody>
+                  <CChartPie
+                    data={{
+                      labels: ['FEMME', 'HOMME'],
+                      datasets: [
+                        {
+                          data: [femme, homme],
+                          backgroundColor: ['#efd510', '#acc6aa'],
+                          hoverBackgroundColor: ['#ecffa3', '#79d1c3'],
+                        },
+                      ],
+                    }}
+                  />
+                </CCardBody>
+              </CCard>
+            </CCol>
+          </CRow>
+        </>
+      ) : (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-grow text-warning" role="status">
+            <span className="sr-only"></span>
+          </div>
+        </div>
+      )}
     </>
   )
 }

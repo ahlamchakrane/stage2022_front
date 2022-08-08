@@ -14,12 +14,43 @@ const Login = () => {
   const [formValues, setFormValues] = useState(initialValues)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [user, setUser] = useState()
-  const [roles, setRoles] = useState([])
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
+  }
+  const getUser = () => {
+    axios
+      .get('/api/employe')
+      .then((res) => {
+        const id = res.data.id
+        getRolesUser(id)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  const getRolesUser = (id) => {
+    axios
+      .get(`/employes/${id}/roles`)
+      .then((res) => {
+        console.log('he')
+        const roles = res.data
+        if (roles) {
+          for (let i = 0; i < roles.length; i++) {
+            if (roles[i].nom === 'ADMIN') {
+              Cookies.set('ROLE', 'ADMIN')
+              return
+            } else if (roles[i].nom === 'USER') {
+              Cookies.set('ROLE', 'USER')
+              return
+            }
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -29,6 +60,7 @@ const Login = () => {
       .then(() => {
         setSuccess(!success)
         navigate('/dashboard')
+        getUser()
       })
       .catch(function (error) {
         setError(!error)

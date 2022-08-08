@@ -1,9 +1,7 @@
 import React from 'react'
-import { CRow, CCol, CDropdown, CDropdownMenu, CDropdownItem, CDropdownToggle, CWidgetStatsA, CWidgetStatsD } from '@coreui/react'
-import { getStyle } from '@coreui/utils'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
+import { CRow, CCol, CWidgetStatsD } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cibFacebook, cibTwitter, cilAddressBook, cilArrowBottom, cilArrowTop, cilEnvelopeOpen, cilOptions, cilPeople } from '@coreui/icons'
+import { cilAddressBook, cilEnvelopeOpen, cilPeople } from '@coreui/icons'
 
 // eslint-disable-next-line react/prop-types
 const WidgetsDropdown = ({ demandes, patients, employes }) => {

@@ -6,7 +6,7 @@ import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CTable, CTable
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
 import { Navigate } from 'react-router-dom'
-
+import Cookies from 'js-cookie'
 // Containers
 
 const AllPatients = (props) => {
@@ -24,7 +24,6 @@ const AllPatients = (props) => {
   const [id, setId] = useState(false)
   const [getDemandes, setGetDemandes] = useState(false)
   const [clickAdd, setClickAdd] = useState(false)
-  const [user, setUser] = useState({})
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -35,8 +34,8 @@ const AllPatients = (props) => {
   useEffect(() => {
     setInterval(() => {
       setIsDisplayed(true)
-    }, 600)
-    getUser()
+    }, 700)
+    setRoles(Cookies.get('ROLE'))
     getAllPatients()
   }, [])
   const getAllPatients = () => {
@@ -47,39 +46,6 @@ const AllPatients = (props) => {
         setPatients(patients)
       })
       .catch(function () {})
-  }
-  async function getUser() {
-    axios
-      .get('/api/employe')
-      .then((res) => {
-        const id = res.data.id
-        setUser(res.data)
-        getRolesUser(id)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  }
-  async function getRolesUser(id) {
-    axios
-      .get(`/employes/${id}/roles`)
-      .then((res) => {
-        const roles = res.data
-        if (roles) {
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === 'ADMIN') {
-              setRoles('ADMIN')
-              return
-            } else if (roles[i].nom === 'USER') {
-              setRoles('USER')
-              return
-            }
-          }
-        }
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
   }
   const deletePatient = (id) => {
     roles === 'ADMIN'
