@@ -1,131 +1,201 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { CButton, CButtonGroup, CCard, CCardBody, CCardFooter, CCol, CProgress, CRow } from '@coreui/react'
-import { CChartLine } from '@coreui/react-chartjs'
+import { CButton, CButtonGroup, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CProgress, CRow } from '@coreui/react'
+import { CChartBar, CChartDoughnut, CChartLine, CChartPie, CChartPolarArea } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import { cilCloudDownload } from '@coreui/icons'
+import axios from 'axios'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
-
+  const [demandes, setDemandes] = useState()
+  const [patients, setPatients] = useState()
+  const [employes, setEmployes] = useState()
+  const [pending, setPending] = useState()
+  const [canceled, setCanceled] = useState()
+  const [done, setDone] = useState()
+  const [femme, setFemme] = useState()
+  const [homme, setHomme] = useState()
+  const [staff, setStaff] = useState()
+  const [postBac, setPostBac] = useState()
+  const getNbrDemandesPatient = () => {}
+  const getGenrePatient = () => {
+    let femmes = 0
+    let hommes = 0
+    axios
+      .get(`/patients`)
+      .then((res) => {
+        for (const dataObj of res.data) {
+          if (dataObj.genre === 'FEMME') {
+            femmes += 1
+          } else if (dataObj.genre === 'HOMME') {
+            hommes += 1
+          }
+        }
+        setHomme(femmes)
+        setFemme(hommes)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  const getEmployes = () => {
+    let lengthEmploye = 0
+    axios
+      .get(`/employes`)
+      .then((res) => {
+        lengthEmploye = res.data.length
+        if (lengthEmploye !== 0) {
+          setEmployes(lengthEmploye)
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  const getTypePatient = () => {
+    let staff = 0
+    let postBac = 0
+    let lengthPatient = 0
+    axios
+      .get(`/patients`)
+      .then((res) => {
+        lengthPatient = res.data.length
+        if (lengthPatient !== 0) {
+          for (const dataObj of res.data) {
+            if (dataObj.typePatient === 'STAFF') {
+              staff += 1
+            } else if (dataObj.typePatient === 'POSTBAC') {
+              postBac += 1
+            }
+          }
+          setPatients(lengthPatient)
+          setStaff(staff)
+          setPostBac(postBac)
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  const getStatusDemandes = () => {
+    let nbrPending = 0
+    let nbrDone = 0
+    let nbrCanceled = 0
+    let lengthDemandes = 0
+    axios
+      .get(`/demandes`)
+      .then((res) => {
+        lengthDemandes = res.data.length
+        if (lengthDemandes !== 0) {
+          for (const dataObj of res.data) {
+            if (dataObj.status === 'DONE') {
+              nbrDone += 1
+            } else if (dataObj.status === 'PENDING') {
+              nbrPending += 1
+            } else if (dataObj.status === 'CANCELED') {
+              nbrCanceled += 1
+            }
+          }
+          setDemandes(lengthDemandes)
+          setPending(nbrPending)
+          setDone(nbrDone)
+          setCanceled(nbrCanceled)
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+  useEffect(() => {
+    getNbrDemandesPatient()
+    getStatusDemandes()
+    getGenrePatient()
+    getTypePatient()
+    getEmployes()
+  }, [])
   return (
     <>
-      <WidgetsDropdown />
-      <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Statistiques
-              </h4>
-            </CCol>
-            <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
-              <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
-                  <CButton color="outline-secondary" key={value} className="mx-0" active={value === 'Month'}>
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </CCol>
-          </CRow>
-          <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
-            data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                  borderColor: getStyle('--cui-info'),
-                  pointHoverBackgroundColor: getStyle('--cui-info'),
-                  borderWidth: 2,
-                  data: [random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200)],
-                  fill: true,
-                },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
-                  borderWidth: 2,
-                  data: [random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200)],
-                },
-                {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-                y: {
-                  ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250,
-                  },
-                },
-              },
-              elements: {
-                line: {
-                  tension: 0.4,
-                },
-                point: {
-                  radius: 0,
-                  hitRadius: 10,
-                  hoverRadius: 4,
-                  hoverBorderWidth: 3,
-                },
-              },
-            }}
-          />
-        </CCardBody>
-        <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter>
-      </CCard>
+      <WidgetsDropdown demandes={demandes} patients={patients} employes={employes} />
+      <CRow>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>En chiffres</CCardHeader>
+            <CCardBody>
+              <CChartPolarArea
+                data={{
+                  labels: ['DEMANDES', 'EMPLOYES', 'PATIENTS'],
+                  datasets: [
+                    {
+                      data: [demandes, employes, patients],
+                      backgroundColor: ['#cadefc', '#dfd3c3', '#cca8e9'],
+                    },
+                  ],
+                }}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>Types Patients</CCardHeader>
+            <CCardBody>
+              <CChartPolarArea
+                data={{
+                  labels: ['DONE', 'CANCELED', 'PENDING'],
+                  datasets: [
+                    {
+                      data: [done, canceled, pending],
+                      backgroundColor: ['#efd510', '#4BC0C0', '#cecece'],
+                    },
+                  ],
+                }}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>Status Demandes</CCardHeader>
+            <CCardBody>
+              <CChartPie
+                data={{
+                  labels: ['POSTBAC', 'STAFF'],
+                  datasets: [
+                    {
+                      data: [postBac, staff],
+                      backgroundColor: ['#e1ffcf', '#e3c878'],
+                      hoverBackgroundColor: ['#49beb7', '#de703c'],
+                    },
+                  ],
+                }}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>Genre</CCardHeader>
+            <CCardBody>
+              <CChartPie
+                data={{
+                  labels: ['FEMME', 'HOMME'],
+                  datasets: [
+                    {
+                      data: [femme, homme],
+                      backgroundColor: ['#efd510', '#acc6aa'],
+                      hoverBackgroundColor: ['#ecffa3', '#79d1c3'],
+                    },
+                  ],
+                }}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
     </>
   )
 }
