@@ -2,7 +2,7 @@ import React from 'react'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 
 // eslint-disable-next-line react/prop-types
-const ModalSuccess = ({ changeVisibility, isVisible }) => {
+const ModalSuccess = ({ body, changeVisibility, isVisible }) => {
   const close = () => {
     changeVisibility(!isVisible)
   }
@@ -16,7 +16,7 @@ const ModalSuccess = ({ changeVisibility, isVisible }) => {
         >
           <CModalTitle>Success</CModalTitle>
         </CModalHeader>
-        <CModalBody>Everything is up good !</CModalBody>
+        <CModalBody>{body ? body : 'Tout est bien !'}</CModalBody>
         <CModalFooter>
           <CButton color="visible" onClick={() => close()}>
             Close

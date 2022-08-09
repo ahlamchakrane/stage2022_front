@@ -26,6 +26,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
     setIsSubmit(true)
   }
   const handleUpdate = (e) => {
+    setIsSubmit(false)
     const demande = formValues
     axios
       .put(`/demandes/${id}`, demande)

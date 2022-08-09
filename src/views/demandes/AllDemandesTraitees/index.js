@@ -12,6 +12,7 @@ const AllDemandesTraitees = (props) => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
+  const UpdateRendezVous = React.lazy(() => import('src/views/rendezVous/updateRendezVous'))
 
   const [demandes, setDemandes] = useState([])
   const [visible, setVisible] = useState(false)
@@ -23,6 +24,8 @@ const AllDemandesTraitees = (props) => {
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [idPlanifier, setIdPlanifier] = useState(new Date())
+  const [planifier, setPlanifier] = useState(false)
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(10)
@@ -33,7 +36,7 @@ const AllDemandesTraitees = (props) => {
     }, 700)
     setRoles(Cookies.get('ROLE'))
     getDemandes()
-  })
+  }, [])
 
   const getDemandes = () => {
     const list = []
@@ -87,6 +90,15 @@ const AllDemandesTraitees = (props) => {
     setId(id)
     setClickDelete(!isVisible)
   }
+  const onClickPlanifier = (id) => {
+    setPlanifier(true)
+    setIdPlanifier(id)
+  }
+  const changePlanifier = (error, success) => {
+    setPlanifier(false)
+    setError(error)
+    setSuccess(success)
+  }
   const changeConfirmation = (confirmation) => {
     if (confirmation) deleteDemande(id)
     setClickDelete(false)
@@ -102,6 +114,7 @@ const AllDemandesTraitees = (props) => {
   return (
     <>
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {planifier && <UpdateRendezVous id={idPlanifier} changeVisibility={changePlanifier} isVisible={planifier} />}
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {isDisplayed ? (
@@ -110,7 +123,7 @@ const AllDemandesTraitees = (props) => {
             <CInputGroup className="has-validation">
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -119,7 +132,7 @@ const AllDemandesTraitees = (props) => {
               <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -153,7 +166,7 @@ const AllDemandesTraitees = (props) => {
                       <div>{item.status}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="info" shape="rounded-pill">
+                      <CButton color="info" shape="rounded-pill" onClick={() => onClickPlanifier(item.id)}>
                         <CIcon icon={cilCalendar} />
                       </CButton>
                     </CTableDataCell>

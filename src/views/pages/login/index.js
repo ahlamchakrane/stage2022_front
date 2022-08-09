@@ -7,13 +7,17 @@ import axios from 'axios'
 import ModalError from 'src/views/modals/modalError'
 import DefaultLayout from 'src/layout/DefaultLayout'
 import Cookies from 'js-cookie'
-
+import RendezVous from 'src/views/rendezVous'
+import ModalSuccess from 'src/views/modals/modalSuccess'
+//https://www.youtube.com/watch?v=T6rElSLldyc
 const Login = () => {
   const navigate = useNavigate()
   const initialValues = { email: null, password: null }
   const [formValues, setFormValues] = useState(initialValues)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [demandeSuccess, setDemandeSuccess] = useState(false)
+  const [reserver, setReserver] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -34,7 +38,6 @@ const Login = () => {
     axios
       .get(`/employes/${id}/roles`)
       .then((res) => {
-        console.log('he')
         const roles = res.data
         if (roles) {
           for (let i = 0; i < roles.length; i++) {
@@ -69,11 +72,20 @@ const Login = () => {
   const changeError = (isVisible) => {
     setError(isVisible)
   }
+  const changeSuccess = (isVisible) => {
+    setDemandeSuccess(isVisible)
+  }
+  const changeReserver = (error, success) => {
+    setReserver(false)
+    setError(error)
+    setDemandeSuccess(success)
+  }
   return (
     <>
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {demandeSuccess && <ModalSuccess body="Un message de confirmation vous sera envoyé une fois que la demande sera traité par notre team. Merci !" changeVisibility={changeSuccess} isVisible={demandeSuccess} />}
       {success && <NavLink to={<DefaultLayout />} />}
-
+      {reserver && <RendezVous changeVisibility={changeReserver} isVisible={reserver} success={false} error={false} />}
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
         <CContainer>
           <CRow className="justify-content-center">
@@ -107,9 +119,11 @@ const Login = () => {
                 <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                   <CCardBody className="text-center">
                     <div>
-                      <h3>Welcome to</h3>
-                      <br />
-                      <h2>Health Center Application</h2>
+                      <h3>Rendez-Vous ?</h3>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                      <button className="btn btn-primary mt-3 active" aria-current="page" type="button" tabIndex="-1" onClick={(e) => setReserver(true)}>
+                        Get Started !
+                      </button>
                     </div>
                   </CCardBody>
                 </CCard>

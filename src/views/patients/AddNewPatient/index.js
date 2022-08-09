@@ -58,7 +58,7 @@ const AddNewPatient = ({ changeVisibility }) => {
       errors.genre = 'Gender is required'
     }
     if (!values.typePatient) {
-      errors.typePatient = 'Type Patient must is required'
+      errors.typePatient = 'Type Patient is required'
     }
     return errors
   }
@@ -85,7 +85,7 @@ const AddNewPatient = ({ changeVisibility }) => {
             <CFormLabel htmlFor="nom">Nom</CFormLabel>
             <CInputGroup className="has-validation">
               <CInputGroupText>@</CInputGroupText>
-              <CFormInput type="text" name="nom" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
+              <CFormInput type="text" name="nom" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
               <CFormFeedback invalid>{formErrors.nom}</CFormFeedback>
             </CInputGroup>
           </CCol>

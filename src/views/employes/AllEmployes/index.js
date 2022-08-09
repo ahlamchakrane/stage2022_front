@@ -36,7 +36,7 @@ const AllEmployes = (props) => {
     }, 700)
     setRoles(Cookies.get('ROLE'))
     getAllEmployes()
-  })
+  }, [])
   const getAllEmployes = () => {
     axios
       .get('/employes')
@@ -120,7 +120,7 @@ const AllEmployes = (props) => {
             <CInputGroup className="has-validation">
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -129,7 +129,7 @@ const AllEmployes = (props) => {
               <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >

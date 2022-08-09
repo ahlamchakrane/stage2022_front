@@ -15,7 +15,7 @@ const ModalError = ({ changeVisibility, isVisible }) => {
       >
         <CModalTitle>Error</CModalTitle>
       </CModalHeader>
-      <CModalBody>Ooops ! Something went wrong</CModalBody>
+      <CModalBody>Ooops ! Une erreur s est produite</CModalBody>
       <CModalFooter>
         <CButton color="danger" onClick={() => close()}>
           Close

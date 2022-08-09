@@ -15,6 +15,7 @@ const AllDemandesPatient = (props) => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
+  const UpdateRendezVous = React.lazy(() => import('src/views/rendezVous/updateRendezVous'))
 
   const [demandes, setDemandes] = useState([])
   const [visible, setVisible] = useState(false)
@@ -26,6 +27,8 @@ const AllDemandesPatient = (props) => {
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [idPlanifier, setIdPlanifier] = useState(new Date())
+  const [planifier, setPlanifier] = useState(false)
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(10)
@@ -37,7 +40,7 @@ const AllDemandesPatient = (props) => {
     }, 700)
     setRoles(Cookies.get('ROLE'))
     getDemandesPatient()
-  })
+  }, [])
   const getDemandesPatient = () => {
     axios
       .get(`/patients/${patientId}/demandes`)
@@ -84,6 +87,15 @@ const AllDemandesPatient = (props) => {
   const changeError = (isVisible) => {
     setError(isVisible)
   }
+  const onClickPlanifier = (id) => {
+    setPlanifier(true)
+    setIdPlanifier(id)
+  }
+  const changePlanifier = (error, success) => {
+    setPlanifier(false)
+    setError(error)
+    setSuccess(success)
+  }
   const onClickDelete = (id, isVisible) => {
     setId(id)
     setClickDelete(!isVisible)
@@ -104,6 +116,7 @@ const AllDemandesPatient = (props) => {
     <>
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {planifier && <UpdateRendezVous id={idPlanifier} changeVisibility={changePlanifier} isVisible={planifier} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {isDisplayed ? (
         <>
@@ -111,7 +124,7 @@ const AllDemandesPatient = (props) => {
             <CInputGroup className="has-validation">
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -120,7 +133,7 @@ const AllDemandesPatient = (props) => {
               <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -154,7 +167,7 @@ const AllDemandesPatient = (props) => {
                       <div>{item.status}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="info" shape="rounded-pill">
+                      <CButton color="info" shape="rounded-pill" onClick={() => onClickPlanifier(item.id)}>
                         <CIcon icon={cilCalendar} />
                       </CButton>
                     </CTableDataCell>

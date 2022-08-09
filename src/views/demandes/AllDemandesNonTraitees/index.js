@@ -1,6 +1,6 @@
 import { cilCalendar, cilEyedropper, cilSearch, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CButton, CCol, CForm, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import { CBadge, CButton, CCol, CForm, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
@@ -13,6 +13,7 @@ const AllDemandesNonTraitees = () => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
+  const UpdateRendezVous = React.lazy(() => import('src/views/rendezVous/updateRendezVous'))
 
   const [demandes, setDemandes] = useState([])
   const [visible, setVisible] = useState(false)
@@ -24,6 +25,9 @@ const AllDemandesNonTraitees = () => {
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [planifier, setPlanifier] = useState(false)
+  const [today, setToday] = useState(new Date())
+  const [idPlanifier, setIdPlanifier] = useState(new Date())
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(10)
@@ -34,7 +38,7 @@ const AllDemandesNonTraitees = () => {
     }, 700)
     setRoles(Cookies.get('ROLE'))
     getDemandes()
-  })
+  }, [])
   const getDemandes = () => {
     const list = []
     axios
@@ -47,7 +51,7 @@ const AllDemandesNonTraitees = () => {
         setDemandes(list)
       })
       .catch(function (error) {
-        console.log(error.toJSON())
+        console.log(error)
       })
   }
   const deleteDemande = (id) => {
@@ -85,6 +89,15 @@ const AllDemandesNonTraitees = () => {
   const changeError = (isVisible) => {
     setError(isVisible)
   }
+  const onClickPlanifier = (id) => {
+    setPlanifier(true)
+    setIdPlanifier(id)
+  }
+  const changePlanifier = (error, success) => {
+    setPlanifier(false)
+    setError(error)
+    setSuccess(success)
+  }
   const onClickDelete = (id, isVisible) => {
     setId(id)
     setClickDelete(!isVisible)
@@ -92,6 +105,9 @@ const AllDemandesNonTraitees = () => {
   const changeConfirmation = (confirmation) => {
     if (confirmation) deleteDemande(id)
     setClickDelete(false)
+  }
+  const getBadgeValue = (item) => {
+    if (new Date(item.date).getDay() === today.getDay() && new Date(item.date).getMonth() + 1 === today.getMonth() + 1 && new Date(item.date).getFullYear() === today.getFullYear()) return 'new'
   }
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
@@ -104,6 +120,7 @@ const AllDemandesNonTraitees = () => {
   return (
     <>
       {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
+      {planifier && <UpdateRendezVous id={idPlanifier} changeVisibility={changePlanifier} isVisible={planifier} />}
       {error && <ModalError changeVisibility={changeError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {isDisplayed ? (
@@ -112,7 +129,7 @@ const AllDemandesNonTraitees = () => {
             <CInputGroup className="has-validation">
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -121,7 +138,7 @@ const AllDemandesNonTraitees = () => {
               <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
               <CInputGroupText
                 style={{
-                  backgroundColor: '#3C4B64',
+                  backgroundColor: '#4f5d73',
                   color: '#fff',
                 }}
               >
@@ -146,7 +163,16 @@ const AllDemandesNonTraitees = () => {
                 .map((item, index) => (
                   <CTableRow v-for="item in tableItems" key={index}>
                     <CTableDataCell>
-                      <div>#{item.id}</div>
+                      <CBadge
+                        color="danger"
+                        shape="rounded-pill"
+                        style={{
+                          marginRight: 5,
+                        }}
+                      >
+                        {getBadgeValue(item)}
+                      </CBadge>
+                      #{item.id}
                     </CTableDataCell>
                     <CTableDataCell>
                       <div>{item.date}</div>
@@ -155,7 +181,7 @@ const AllDemandesNonTraitees = () => {
                       <div>{item.status}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="info" shape="rounded-pill">
+                      <CButton color="info" shape="rounded-pill" onClick={() => onClickPlanifier(item.id)}>
                         <CIcon icon={cilCalendar} />
                       </CButton>
                     </CTableDataCell>

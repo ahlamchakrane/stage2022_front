@@ -19,10 +19,10 @@ const Dashboard = () => {
   const [staff, setStaff] = useState()
   const [postBac, setPostBac] = useState()
 
-  async function getGenrePatient() {
+  const getGenrePatient = () => {
     let femmes = 0
     let hommes = 0
-    await axios
+    axios
       .get(`/patients`)
       .then((res) => {
         for (const dataObj of res.data) {
@@ -39,9 +39,9 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  async function getEmployes() {
+  const getEmployes = () => {
     let lengthEmploye = 0
-    await axios
+    axios
       .get(`/employes`)
       .then((res) => {
         lengthEmploye = res.data.length
@@ -53,11 +53,11 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  async function getTypePatient() {
+  const getTypePatient = () => {
     let staff = 0
     let postBac = 0
     let lengthPatient = 0
-    await axios
+    axios
       .get(`/patients`)
       .then((res) => {
         lengthPatient = res.data.length
@@ -78,12 +78,12 @@ const Dashboard = () => {
         console.log(error)
       })
   }
-  async function getStatusDemandes() {
+  const getStatusDemandes = () => {
     let nbrPending = 0
     let nbrDone = 0
     let nbrCanceled = 0
     let lengthDemandes = 0
-    await axios
+    axios
       .get(`/demandes`)
       .then((res) => {
         lengthDemandes = res.data.length
