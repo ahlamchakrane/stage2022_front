@@ -10,7 +10,6 @@ import { AppHeaderDropdown } from './header/index'
 import axios from 'axios'
 const AppHeader = () => {
   const [newDemandes, setNewDemandes] = useState(null)
-  const [showDemandes, setShowDemandes] = useState(false)
   const [today, setToday] = useState(new Date())
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -30,10 +29,9 @@ const AppHeader = () => {
   }
   useEffect(() => {
     getNewDemande()
-  }, [newDemandes])
+  }, [])
   return (
     <>
-      {showDemandes && <Navigate to={'/demandes/all-demandes-non-traitees'} />}
       <CHeader position="sticky" className="mb-4">
         <CContainer fluid>
           <CHeaderToggler className="ps-1" onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}>
@@ -52,7 +50,7 @@ const AppHeader = () => {
                 <CIcon icon={cilBell} size="lg" />
                 {newDemandes && (
                   <CBadge color="danger" shape="rounded-pill">
-                    {newDemandes} demandes
+                    {newDemandes}
                   </CBadge>
                 )}
               </CNavLink>

@@ -7,6 +7,7 @@ export const EmployeContext = React.createContext()
 const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVisible }) => {
   const [visible, setVisible] = useState(isVisible)
   const [roles, setRoles] = useState(null)
+  const [cPassword, setCPassword] = useState(null)
   const initialValues = { username: username, email: email, telephone: telephone, roles, password: null }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
@@ -15,6 +16,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
     if (e.target.id === 'roles') setRoles(e.target.value)
+    if (e.target.id === 'cPassword') setCPassword(e.target.value)
   }
   const getRoles = () => {
     const obj = { id: null, nom: null }
@@ -42,9 +44,6 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   }, [formErrors, roles])
 
   const handleUpdate = () => {
-    // if (password !== 0 && cPassword !== 0) {
-    //   if (password !== cPassword) console.log('show err message')
-    // }
     const employe = formValues
     if (roles) employe.roles = [roles]
     axios
@@ -81,6 +80,13 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     }
     if (values.password && values.password.length < 6) {
       errors.password = 'password must be more than 6 characters'
+    }
+    if (values.cPassword && values.cPassword.length < 6) {
+      errors.cPassword = 'password must be more than 6 characters'
+    }
+    if ((values.cPassword || values.password) && values.cPassword !== values.password) {
+      errors.password = 'passwords does not match'
+      errors.cPassword = 'passwords does not match'
     }
     return errors
   }
@@ -122,8 +128,8 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
           </CCol>
           <CCol md={6}>
             <CFormLabel>Confirm Password</CFormLabel>
-            <CFormInput type="password" name="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} onChange={handleChange} />
-            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
+            <CFormInput type="password" name="cPassword" valid={formErrors.cPassword ? false : true} invalid={formErrors.cPassword ? true : false} onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.cPassword}</CFormFeedback>
           </CCol>
           <>
             <CModalFooter>

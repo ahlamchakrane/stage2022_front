@@ -1,10 +1,11 @@
-import { cilCalendar, cilEyedropper, cilSearch, cilTrash } from '@coreui/icons'
+import { cilCalendar, cilCloudDownload, cilEyedropper, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CBadge, CButton, CCol, CForm, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import { CBadge, CButton, CCol, CFormInput, CInputGroup, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
 import Cookies from 'js-cookie'
+import jsPDF from 'jspdf'
 // Containers
 
 const AllDemandesNonTraitees = () => {
@@ -48,6 +49,9 @@ const AllDemandesNonTraitees = () => {
         demandes.map((demande) => {
           demande.status !== 'DONE' && list.push(demande)
         })
+        if (list) {
+          list.sort((a, b) => b.id - a.id)
+        }
         setDemandes(list)
       })
       .catch(function (error) {
@@ -109,6 +113,48 @@ const AllDemandesNonTraitees = () => {
   const getBadgeValue = (item) => {
     if (new Date(item.date).getDay() === today.getDay() && new Date(item.date).getMonth() + 1 === today.getMonth() + 1 && new Date(item.date).getFullYear() === today.getFullYear()) return 'new'
   }
+  const onDownload = () => {
+    const pdf = new jsPDF('p', 'pt', 'a4')
+    const columns = ['Id', 'status', 'date']
+    var rows = []
+
+    for (let i = 0; i < demandes.length; i++) {
+      var temp = [demandes[i].id, demandes[i].status, demandes[i].date]
+      rows.push(temp)
+    }
+    pdf.text(235, 40, 'Health-Center-Demandes')
+    pdf.autoTable(columns, rows, {
+      startY: 65,
+      theme: 'grid',
+      styles: {
+        font: 'times',
+        halign: 'center',
+        cellPadding: 3.5,
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        textColor: [0, 0, 0],
+        fontStyle: 'normal',
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        fillColor: [166, 204, 247],
+      },
+      alternateRowStyles: {
+        fillColor: [212, 212, 212],
+        textColor: [0, 0, 0],
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      rowStyles: {
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      tableLineColor: [0, 0, 0],
+    })
+    pdf.save('demandes')
+  }
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -125,27 +171,18 @@ const AllDemandesNonTraitees = () => {
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {isDisplayed ? (
         <>
-          <CCol md={6}>
-            <CInputGroup className="has-validation">
-              <CInputGroupText
-                style={{
-                  backgroundColor: '#4f5d73',
-                  color: '#fff',
-                }}
-              >
-                <CIcon icon={cilSearch} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
-              <CInputGroupText
-                style={{
-                  backgroundColor: '#4f5d73',
-                  color: '#fff',
-                }}
-              >
-                Search
-              </CInputGroupText>
-            </CInputGroup>
-          </CCol>
+          <CRow>
+            <CCol md={8}>
+              <CInputGroup className="has-validation">
+                <CFormInput type="text" placeholder="Search by name" onChange={(e) => setSearchTerm(e.target.value)} />
+              </CInputGroup>
+            </CCol>
+            <CCol md={2} style={{ marginLeft: 170 }}>
+              <CButton color="dark" shape="rounded-pill" className="mr-2" onClick={() => onDownload()}>
+                <CIcon icon={cilCloudDownload} />
+              </CButton>
+            </CCol>
+          </CRow>
           <br />
           <CTable align="middle" className="mb-0 border" hover responsive>
             <CTableHead color="light">

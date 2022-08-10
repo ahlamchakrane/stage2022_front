@@ -11,6 +11,7 @@ const AddNewEmploye = ({ changeVisibility }) => {
   const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
   const [roles, setRoles] = useState('USER')
+  const [cPassword, setCPassword] = useState(null)
   const [userRole, setUserRole] = useState({ id: null, nom: 'USER' })
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
@@ -19,6 +20,7 @@ const AddNewEmploye = ({ changeVisibility }) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
     if (e.target.id === 'roles') setRoles(e.target.value)
+    if (e.target.id === 'cPassword') setCPassword(e.target.value)
   }
   useEffect(() => {
     getRoles()
@@ -87,6 +89,13 @@ const AddNewEmploye = ({ changeVisibility }) => {
     if (values.password && values.password.length < 6) {
       errors.password = 'password must be more than 6 characters'
     }
+    if (values.cPassword && values.cPassword.length < 6) {
+      errors.cPassword = 'password must be more than 6 characters'
+    }
+    if ((values.cPassword || values.password) && values.cPassword !== values.password) {
+      errors.password = 'passwords does not match'
+      errors.cPassword = 'passwords does not match'
+    }
     return errors
   }
   const close = (error, success) => {
@@ -136,9 +145,9 @@ const AddNewEmploye = ({ changeVisibility }) => {
             <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="cPassword">Repeat Password</CFormLabel>
-            <CFormInput type="password" id="cPassword" valid={formErrors.password ? false : true} invalid={formErrors.password ? true : false} required onChange={handleChange} />
-            <CFormFeedback invalid>{formErrors.password}</CFormFeedback>
+            <CFormLabel htmlFor="cPassword">Confirm Password</CFormLabel>
+            <CFormInput type="password" name="cPassword" valid={formErrors.cPassword ? false : true} invalid={formErrors.cPassword ? true : false} required onChange={handleChange} />
+            <CFormFeedback invalid>{formErrors.cPassword}</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="roles">Role</CFormLabel>

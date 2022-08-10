@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { cilDescription, cilEyedropper, cilFolderOpen, cilPeople, cilSearch, cilTrash, cilUserPlus } from '@coreui/icons'
+import { cilCloudDownload, cilDescription, cilEyedropper, cilFolderOpen, cilTrash, cilUserPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import { CButton, CCol, CFormInput, CInputGroup, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
 import axios from 'axios'
 import Pagination from 'src/views/Pagination'
 import { Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import autoTable from 'jspdf-autotable'
+import jsPDF from 'jspdf'
+
 // Containers
 
 const AllPatients = (props) => {
@@ -102,6 +105,48 @@ const AllPatients = (props) => {
     setError(error)
     setSuccess(success)
   }
+  const onDownload = () => {
+    const pdf = new jsPDF('p', 'pt', 'a4')
+    const columns = ['Id', 'nom', 'email', 'telephone', 'typePatient']
+    var rows = []
+
+    for (let i = 0; i < patients.length; i++) {
+      var temp = [patients[i].id, patients[i].nom, patients[i].email, patients[i].telephone, patients[i].typePatient]
+      rows.push(temp)
+    }
+    pdf.text(235, 40, 'Health-Center-Patients')
+    pdf.autoTable(columns, rows, {
+      startY: 65,
+      theme: 'grid',
+      styles: {
+        font: 'times',
+        halign: 'center',
+        cellPadding: 3.5,
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        textColor: [0, 0, 0],
+        fontStyle: 'normal',
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+        fillColor: [166, 204, 247],
+      },
+      alternateRowStyles: {
+        fillColor: [212, 212, 212],
+        textColor: [0, 0, 0],
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      rowStyles: {
+        lineWidth: 0.5,
+        lineColor: [0, 0, 0],
+      },
+      tableLineColor: [0, 0, 0],
+    })
+    pdf.save('patients')
+  }
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -119,45 +164,35 @@ const AllPatients = (props) => {
       {clickAdd && <AddNewPatient changeVisibility={changeClickAdd} />}
       {isDisplayed ? (
         <>
-          <CCol md={6}>
-            <CInputGroup className="has-validation">
-              <CInputGroupText
-                style={{
-                  backgroundColor: '#4f5d73',
-                  color: '#fff',
-                }}
-              >
-                <CIcon icon={cilSearch} />
-              </CInputGroupText>
-              <CFormInput type="text" placeholder="Search by status" onChange={(e) => setSearchTerm(e.target.value)} />
-              <CInputGroupText
-                style={{
-                  backgroundColor: '#4f5d73',
-                  color: '#fff',
-                }}
-              >
-                Search
-              </CInputGroupText>
-            </CInputGroup>
-          </CCol>
+          <CRow>
+            <CCol md={8}>
+              <CInputGroup className="has-validation">
+                <CFormInput type="text" placeholder="Search by name" onChange={(e) => setSearchTerm(e.target.value)} />
+              </CInputGroup>
+            </CCol>
+            <CCol md={2} style={{ marginLeft: 170 }}>
+              {roles === 'ADMIN' && (
+                <CButton
+                  color="dark"
+                  shape="rounded-pill"
+                  style={{
+                    margin: 5,
+                  }}
+                  onClick={() => onClickAdd()}
+                >
+                  <CIcon icon={cilUserPlus} />
+                </CButton>
+              )}
+              <CButton color="dark" shape="rounded-pill" className="mr-2" onClick={() => onDownload()}>
+                <CIcon icon={cilCloudDownload} />
+              </CButton>
+            </CCol>
+          </CRow>
           <br />
           <CTable align="middle" className="mb-0 border" hover responsive>
             <CTableHead color="light">
               <CTableRow>
-                <CTableHeaderCell className="text-center">
-                  {roles === 'ADMIN' && (
-                    <CButton
-                      color="primary"
-                      shape="rounded-pill"
-                      style={{
-                        margin: 5,
-                      }}
-                      onClick={() => onClickAdd()}
-                    >
-                      <CIcon icon={cilUserPlus} />
-                    </CButton>
-                  )}
-                </CTableHeaderCell>
+                <CTableHeaderCell></CTableHeaderCell>
                 <CTableHeaderCell>Patients</CTableHeaderCell>
                 <CTableHeaderCell className="text-center">email</CTableHeaderCell>
                 <CTableHeaderCell>Phone number</CTableHeaderCell>
