@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { cilCloudDownload, cilEyedropper, cilTrash, cilUserPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CFormInput, CInputGroup, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
@@ -8,15 +8,13 @@ import Pagination from 'src/views/Pagination'
 import AddNewEmploye from '../AddNewEmploye'
 import Cookies from 'js-cookie'
 import jsPDF from 'jspdf'
-
+import UpdateEmploye from '../updateEmploye'
 // Containers
 
 const AllEmployes = (props) => {
-  const UpdateEmploye = React.lazy(() => import('../updateEmploye'))
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
-
   const [employes, setEmployes] = useState([])
   const [employe, setEmploye] = useState([])
   const [visible, setVisible] = useState(false)
@@ -56,6 +54,12 @@ const AllEmployes = (props) => {
       ? axios
           .delete(`/employes/${id}`)
           .then((res) => {
+            //delete from front
+            let index = employes.findIndex((employe) => {
+              return employe.id === id
+            })
+            employes.splice(index, 1)
+            setEmployes(employes)
             setSuccess(!success)
           })
           .catch(function (error) {
@@ -77,23 +81,12 @@ const AllEmployes = (props) => {
           })
       : setError(!error)
   }
-  const changeVisibility = (isVisible) => {
-    setVisible(isVisible)
-  }
-  const changeSuccess = (isVisible) => {
-    setSuccess(isVisible)
-  }
-  const changeError = (isVisible) => {
-    setError(isVisible)
-  }
   const onClickDelete = (id, isVisible) => {
     setId(id)
     setClickDelete(!isVisible)
   }
-  const onClickAdd = () => {
-    setClickAdd(true)
-  }
-  const changeClickAdd = (error, success) => {
+  const changeClickAdd = (error, success, employes) => {
+    setEmployes(employes)
     setClickAdd(false)
     setError(error)
     setSuccess(success)
@@ -101,6 +94,10 @@ const AllEmployes = (props) => {
   const changeConfirmation = (confirmation) => {
     if (confirmation) deleteEmploye(id)
     setClickDelete(false)
+  }
+  const updates = (isVisible, employe) => {
+    if (employe) setEmployes(employes.map((e) => (e.id === employe.id ? employe : e)))
+    setVisible(isVisible)
   }
   const onDownload = () => {
     const pdf = new jsPDF('p', 'pt', 'a4')
@@ -154,10 +151,12 @@ const AllEmployes = (props) => {
   }
   return (
     <>
-      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
-      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {success && <ModalSuccess changeVisibility={setSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={setError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
-      {clickAdd && <AddNewEmploye changeVisibility={changeClickAdd} />}
+      {clickAdd && <AddNewEmploye changeVisibility={changeClickAdd} employes={employes} setEmployes={setEmployes} />}
+      {visible && <UpdateEmploye changeVisibility={updates} id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
+
       {isDisplayed ? (
         <>
           <CRow>
@@ -174,7 +173,7 @@ const AllEmployes = (props) => {
                   style={{
                     margin: 5,
                   }}
-                  onClick={() => onClickAdd()}
+                  onClick={() => setClickAdd(true)}
                 >
                   <CIcon icon={cilUserPlus} />
                 </CButton>
@@ -235,7 +234,6 @@ const AllEmployes = (props) => {
                     )}
                   </CTableRow>
                 ))}
-              {visible && <UpdateEmploye changeVisibility={changeVisibility} id={employe.id} username={employe.username} email={employe.email} telephone={employe.telephone} isVisible={visible} />}
             </CTableBody>
           </CTable>
           <Pagination itemsPerPage={itemsPerPage} totalItems={employes.length} paginate={paginate} />

@@ -10,6 +10,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   const [formErrors, setFormErrors] = useState({})
   const [visible, setVisible] = useState(isVisible)
   const [isSubmit, setIsSubmit] = useState(false)
+  const [demande, setDemande] = useState()
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -31,6 +32,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
     axios
       .put(`/demandes/${id}`, demande)
       .then((res) => {
+        setDemande(res.data)
         setVisible(!visible)
       })
       .catch(function (error) {
@@ -38,7 +40,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
       })
   }
   const close = () => {
-    changeVisibility(!isVisible)
+    changeVisibility(!isVisible, demande)
   }
   const validate = (values) => {
     const errors = {}

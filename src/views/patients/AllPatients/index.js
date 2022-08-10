@@ -9,15 +9,15 @@ import { Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import autoTable from 'jspdf-autotable'
 import jsPDF from 'jspdf'
+import AddNewPatient from '../AddNewPatient'
+import UpdatePatient from '../updatePatient'
 
 // Containers
 
 const AllPatients = (props) => {
-  const UpdatePatient = React.lazy(() => import('../updatePatient'))
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
-  const AddNewPatient = React.lazy(() => import('../AddNewPatient'))
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState([])
   const [visible, setVisible] = useState(false)
@@ -55,6 +55,12 @@ const AllPatients = (props) => {
       ? axios
           .delete(`/patients/${id}`)
           .then((res) => {
+            //delete from front
+            let index = patients.findIndex((patient) => {
+              return patient.id === id
+            })
+            patients.splice(index, 1)
+            setPatients(patients)
             setSuccess(!success)
           })
           .catch(function (error) {
@@ -68,22 +74,13 @@ const AllPatients = (props) => {
           .get(`/patients/${id}`)
           .then((res) => {
             const patient = res.data
+            setPatient(patient) //the order is important so we set the patient then we show the modal
             setVisible(!visible)
-            setPatient(patient)
           })
           .catch(function (error) {
             setError(!error)
           })
       : setError(!error)
-  }
-  const changeVisibility = (isVisible) => {
-    setVisible(isVisible)
-  }
-  const changeSuccess = (isVisible) => {
-    setSuccess(isVisible)
-  }
-  const changeError = (isVisible) => {
-    setError(isVisible)
   }
   const onClickDelete = (id, isVisible) => {
     setId(id)
@@ -93,17 +90,22 @@ const AllPatients = (props) => {
     setId(id)
     setGetDemandes(true)
   }
+  const onClickAdd = () => {
+    setClickAdd(true)
+  }
+  const changeClickAdd = (error, success, patients) => {
+    setPatients(patients)
+    setClickAdd(false)
+    setError(error)
+    setSuccess(success)
+  }
   const changeConfirmation = (confirmation) => {
     if (confirmation) deletePatient(id)
     setClickDelete(false)
   }
-  const onClickAdd = () => {
-    setClickAdd(true)
-  }
-  const changeClickAdd = (error, success) => {
-    setClickAdd(false)
-    setError(error)
-    setSuccess(success)
+  const updates = (isVisible, patient) => {
+    if (patient) setPatients(patients.map((p) => (p.id === patient.id ? patient : p)))
+    setVisible(isVisible)
   }
   const onDownload = () => {
     const pdf = new jsPDF('p', 'pt', 'a4')
@@ -157,11 +159,12 @@ const AllPatients = (props) => {
   }
   return (
     <>
-      {success && <ModalSuccess changeVisibility={changeSuccess} isVisible={success} />}
-      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {success && <ModalSuccess changeVisibility={setSuccess} isVisible={success} />}
+      {error && <ModalError changeVisibility={setError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {getDemandes && <Navigate replace to={`/demandes/all-demandes-patient/${id}`} />}
       {clickAdd && <AddNewPatient changeVisibility={changeClickAdd} />}
+      {visible && <UpdatePatient changeVisibility={updates} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
       {isDisplayed ? (
         <>
           <CRow>
@@ -259,7 +262,6 @@ const AllPatients = (props) => {
                     </CTableDataCell>
                   </CTableRow>
                 ))}
-              {visible && <UpdatePatient changeVisibility={changeVisibility} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
             </CTableBody>
           </CTable>
           <Pagination itemsPerPage={itemsPerPage} totalItems={patients.length} paginate={paginate} />

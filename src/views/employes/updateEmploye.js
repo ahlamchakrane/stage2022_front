@@ -8,6 +8,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   const [visible, setVisible] = useState(isVisible)
   const [roles, setRoles] = useState(null)
   const [cPassword, setCPassword] = useState(null)
+  const [employe, setEmploye] = useState()
   const initialValues = { username: username, email: email, telephone: telephone, roles, password: null }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
@@ -49,6 +50,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     axios
       .put(`/employes/${id}`, employe)
       .then((res) => {
+        setEmploye(res.data)
         setVisible(!visible)
       })
       .catch(function (error) {
@@ -61,7 +63,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     setIsSubmit(true)
   }
   const close = () => {
-    changeVisibility(!isVisible)
+    changeVisibility(!isVisible, employe)
   }
   const validate = (values) => {
     const errors = {}

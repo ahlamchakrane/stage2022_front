@@ -5,7 +5,7 @@ import axios from 'axios'
 // Containers
 
 // eslint-disable-next-line react/prop-types
-const AddNewEmploye = ({ changeVisibility }) => {
+const AddNewEmploye = ({ changeVisibility, employes, setEmployes }) => {
   const initialValues = { username: null, email: null, telephone: null, password: null, genre: 'HOMME' }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
@@ -25,7 +25,7 @@ const AddNewEmploye = ({ changeVisibility }) => {
   useEffect(() => {
     getRoles()
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      handleUpdate()
+      handleAdd()
     }
     if (error !== false || success !== false) close(error, success)
   }, [roles, formErrors, error, success])
@@ -49,13 +49,16 @@ const AddNewEmploye = ({ changeVisibility }) => {
         console.log(error.toJSON())
       })
   }
-  const handleUpdate = (e) => {
+  const handleAdd = (e) => {
     setIsSubmit(false)
-    const employe = formValues
-    employe.roles = [userRole]
+    const new_employe = formValues
+    new_employe.roles = [userRole]
     axios
-      .post('/api/register', employe)
-      .then(() => {
+      .post('/api/register', new_employe)
+      .then((res) => {
+        // eslint-disable-next-line react/prop-types
+        employes.push(res.data)
+        setEmployes(employes)
         setSuccess(!success)
       })
       .catch(function () {
@@ -99,7 +102,7 @@ const AddNewEmploye = ({ changeVisibility }) => {
     return errors
   }
   const close = (error, success) => {
-    changeVisibility(error, success)
+    changeVisibility(error, success, employes)
   }
   return (
     <CModal alignment="center" visible={true} onClose={() => close()}>

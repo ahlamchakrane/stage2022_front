@@ -9,6 +9,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
+  const [patient, setPatient] = useState()
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -30,6 +31,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
     axios
       .put(`/patients/${id}`, patient)
       .then((res) => {
+        setPatient(res.data)
         setVisible(!visible)
       })
       .catch(function (error) {
@@ -37,7 +39,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
       })
   }
   const close = () => {
-    changeVisibility(!isVisible)
+    changeVisibility(!isVisible, patient)
   }
   const validate = (values) => {
     const errors = {}
