@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { cilCloudDownload, cilDescription, cilEyedropper, cilFolderOpen, cilTrash, cilUserPlus } from '@coreui/icons'
+import { cilCloudDownload, cilDescription, cilEyedropper, cilFolderOpen, cilInfo, cilTrash, cilUserPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { CButton, CCol, CFormInput, CInputGroup, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 // Containers
@@ -17,6 +17,7 @@ import UpdatePatient from '../updatePatient'
 const AllPatients = (props) => {
   const ModalError = React.lazy(() => import('src/views/modals/modalError'))
   const ModalSuccess = React.lazy(() => import('src/views/modals/modalSuccess'))
+  const ModalRapport = React.lazy(() => import('src/views/modals/modalRapport'))
   const ModalConfirmation = React.lazy(() => import('src/views/modals/modalConfirmation'))
   const [patients, setPatients] = useState([])
   const [patient, setPatient] = useState([])
@@ -30,6 +31,7 @@ const AllPatients = (props) => {
   const [roles, setRoles] = useState([])
   const [isDisplayed, setIsDisplayed] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [getRapport, setGetRapport] = useState(false)
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1)
@@ -90,9 +92,6 @@ const AllPatients = (props) => {
     setId(id)
     setGetDemandes(true)
   }
-  const onClickAdd = () => {
-    setClickAdd(true)
-  }
   const changeClickAdd = (error, success, patients) => {
     setPatients(patients)
     setClickAdd(false)
@@ -106,6 +105,18 @@ const AllPatients = (props) => {
   const updates = (isVisible, patient) => {
     if (patient) setPatients(patients.map((p) => (p.id === patient.id ? patient : p)))
     setVisible(isVisible)
+  }
+  const getRapportPatient = (id) => {
+    axios
+      .get(`/patients/${id}`)
+      .then((res) => {
+        const patient = res.data
+        setPatient(patient)
+        setGetRapport(!getRapport)
+      })
+      .catch(function (error) {
+        setError(!error)
+      })
   }
   const onDownload = () => {
     const pdf = new jsPDF('p', 'pt', 'a4')
@@ -152,7 +163,11 @@ const AllPatients = (props) => {
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = patients.slice(indexOfFirstItem, indexOfLastItem)
+  let currentItems = null
+  if (searchTerm) currentItems = patients
+  else {
+    currentItems = patients.slice(indexOfFirstItem, indexOfLastItem)
+  }
   //change page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber)
@@ -163,7 +178,8 @@ const AllPatients = (props) => {
       {error && <ModalError changeVisibility={setError} isVisible={error} />}
       {clickDelete && <ModalConfirmation changeVisibility={changeConfirmation} />}
       {getDemandes && <Navigate replace to={`/demandes/all-demandes-patient/${id}`} />}
-      {clickAdd && <AddNewPatient changeVisibility={changeClickAdd} />}
+      {getRapport && <ModalRapport changeVisibility={setGetRapport} id={patient.id} rapport={patient.rapport} isVisible={getRapport} />}
+      {clickAdd && <AddNewPatient changeVisibility={changeClickAdd} patients={patients} setPatients={setPatients} />}
       {visible && <UpdatePatient changeVisibility={updates} id={patient.id} nom={patient.nom} email={patient.email} telephone={patient.telephone} typePatient={patient.typePatient} isVisible={visible} />}
       {isDisplayed ? (
         <>
@@ -181,7 +197,7 @@ const AllPatients = (props) => {
                   style={{
                     margin: 5,
                   }}
-                  onClick={() => onClickAdd()}
+                  onClick={() => setClickAdd(true)}
                 >
                   <CIcon icon={cilUserPlus} />
                 </CButton>
@@ -225,6 +241,16 @@ const AllPatients = (props) => {
                     <CTableDataCell>
                       {roles === 'ADMIN' && (
                         <>
+                          <CButton
+                            color="info"
+                            shape="rounded-pill"
+                            style={{
+                              marginRight: 5,
+                            }}
+                            onClick={() => getRapportPatient(item.id)}
+                          >
+                            <CIcon icon={cilDescription} />
+                          </CButton>
                           <CButton
                             color="warning"
                             shape="rounded-pill"

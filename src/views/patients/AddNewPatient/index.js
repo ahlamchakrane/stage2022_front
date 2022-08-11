@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 // eslint-disable-next-line react/prop-types
-const AddNewPatient = ({ changeVisibility }) => {
+const AddNewPatient = ({ changeVisibility, patients, setPatients }) => {
   const initialValues = { nom: null, email: null, telephone: null, typePatient: 'STAFF', genre: 'HOMME' }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
@@ -17,7 +17,7 @@ const AddNewPatient = ({ changeVisibility }) => {
   }
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      handleUpdate()
+      handleAdd()
     }
     if (error !== false || success !== false) close(error, success)
   }, [formErrors, error, success])
@@ -27,12 +27,15 @@ const AddNewPatient = ({ changeVisibility }) => {
     setFormErrors(validate(formValues))
     setIsSubmit(true)
   }
-  const handleUpdate = (e) => {
+  const handleAdd = (e) => {
     setIsSubmit(false)
     const patient = formValues
     axios
       .post('/patients', patient)
-      .then(() => {
+      .then((res) => {
+        // eslint-disable-next-line react/prop-types
+        patients.push(res.data)
+        setPatients(patients)
         setSuccess(!success)
       })
       .catch(function () {
@@ -63,7 +66,7 @@ const AddNewPatient = ({ changeVisibility }) => {
     return errors
   }
   const close = (error, success) => {
-    changeVisibility(error, success)
+    changeVisibility(error, success, patients)
   }
   return (
     <CModal alignment="center" visible={true} onClose={() => close()}>

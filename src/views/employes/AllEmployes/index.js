@@ -144,7 +144,11 @@ const AllEmployes = (props) => {
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = employes.slice(indexOfFirstItem, indexOfLastItem)
+  let currentItems = null
+  if (searchTerm) currentItems = employes
+  else {
+    currentItems = employes.slice(indexOfFirstItem, indexOfLastItem)
+  }
   //change page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber)

@@ -5,7 +5,6 @@ export const EmployeContext = React.createContext()
 
 // eslint-disable-next-line react/prop-types
 const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVisible }) => {
-  const [visible, setVisible] = useState(isVisible)
   const [roles, setRoles] = useState(null)
   const [cPassword, setCPassword] = useState(null)
   const [employe, setEmploye] = useState()
@@ -45,13 +44,13 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   }, [formErrors, roles])
 
   const handleUpdate = () => {
+    setIsSubmit(false)
     const employe = formValues
     if (roles) employe.roles = [roles]
     axios
       .put(`/employes/${id}`, employe)
       .then((res) => {
         setEmploye(res.data)
-        setVisible(!visible)
       })
       .catch(function (error) {
         console.log(error.toJSON())
@@ -93,7 +92,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     return errors
   }
   return (
-    <CModal visible={visible} onClose={() => close()}>
+    <CModal visible={isVisible} onClose={() => close()}>
       <CModalHeader>
         <CModalTitle>Edit Employés</CModalTitle>
       </CModalHeader>

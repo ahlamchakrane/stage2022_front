@@ -139,7 +139,11 @@ const DemandesTable = ({ demandes, setDemandes }) => {
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentItems = demandes.slice(indexOfFirstItem, indexOfLastItem)
+  let currentItems = null
+  if (searchTerm) currentItems = demandes
+  else {
+    currentItems = demandes.slice(indexOfFirstItem, indexOfLastItem)
+  }
   //change page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber)
