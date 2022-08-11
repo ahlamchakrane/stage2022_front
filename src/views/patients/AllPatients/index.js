@@ -223,15 +223,6 @@ const AllPatients = (props) => {
                       <div>{item.telephone}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <CButton
-                        color="info"
-                        shape="rounded-pill"
-                        style={{
-                          marginRight: 5,
-                        }}
-                      >
-                        <CIcon icon={cilDescription} />
-                      </CButton>
                       {roles === 'ADMIN' && (
                         <>
                           <CButton

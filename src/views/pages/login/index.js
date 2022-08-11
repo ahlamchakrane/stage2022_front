@@ -18,7 +18,17 @@ const Login = () => {
   const [success, setSuccess] = useState(false)
   const [demandeSuccess, setDemandeSuccess] = useState(false)
   const [reserver, setReserver] = useState(false)
-
+  const [access, setAccess] = useState(false)
+  // heures de travail
+  const heures = [8, 9, 10, 11, 14, 15, 16, 17]
+  const current_time = new Date().getDate() + 1
+  useEffect(() => {
+    for (let i = 0; i < heures.length; i++) {
+      if (current_time === heures[i]) {
+        setAccess(true)
+      }
+    }
+  }, [access])
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -80,9 +90,16 @@ const Login = () => {
     setError(error)
     setDemandeSuccess(success)
   }
+  const onReserve = () => {
+    if (access) {
+      setReserver(true)
+    } else {
+      setError(true)
+    }
+  }
   return (
     <>
-      {error && <ModalError changeVisibility={changeError} isVisible={error} />}
+      {error && <ModalError body="You can use our website from 8h-12h to 14h-18h. Thank for understanding" color="warning" changeVisibility={changeError} isVisible={error} />}
       {demandeSuccess && <ModalSuccess body="Un message de confirmation vous sera envoyé une fois que la demande sera traité par notre team. Merci !" changeVisibility={changeSuccess} isVisible={demandeSuccess} />}
       {success && <NavLink to={<DefaultLayout />} />}
       {reserver && <RendezVous changeVisibility={changeReserver} isVisible={reserver} success={false} error={false} />}
@@ -121,7 +138,7 @@ const Login = () => {
                     <div>
                       <h3>Rendez-Vous ?</h3>
                       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                      <button className="btn btn-primary mt-3 active" aria-current="page" type="button" tabIndex="-1" onClick={(e) => setReserver(true)}>
+                      <button className="btn btn-primary mt-3 active" aria-current="page" type="button" tabIndex="-1" onClick={(e) => onReserve()}>
                         Get Started !
                       </button>
                     </div>
