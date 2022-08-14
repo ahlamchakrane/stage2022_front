@@ -10,12 +10,15 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
   const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
   const [patient, setPatient] = useState()
+  const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleUpdate()
     }
-  }, [formErrors])
+    if (error !== false || success !== false) close(error, success)
+  }, [formErrors, error, success])
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -33,20 +36,21 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
       .then((res) => {
         setPatient(res.data)
         setVisible(!visible)
+        setSuccess(!success)
       })
-      .catch(function (error) {
-        console.log(error.toJSON())
+      .catch(function () {
+        setError(!error)
       })
   }
   const close = () => {
-    changeVisibility(!isVisible, patient)
+    changeVisibility(!isVisible, error, success, patient)
   }
   const validate = (values) => {
     const errors = {}
     if (!values.nom) {
       errors.nom = 'Name is required'
     } else if (values.nom.length < 2) {
-      errors.nom = 'Name length is not suffisant'
+      errors.nom = 'length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
@@ -57,7 +61,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
       errors.telephone = 'Phone number is not correct'
     }
     if (!values.typePatient) {
-      errors.typePatient = 'Type Patient must is required'
+      errors.typePatient = 'the Type of Patient is required'
     }
     return errors
   }
@@ -69,12 +73,12 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
           <CCol md={6}>
-            <CFormLabel htmlFor="nom">Nom</CFormLabel>
+            <CFormLabel htmlFor="nom">Name</CFormLabel>
             <CFormInput type="text" name="nom" value={formValues.nom} valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
             <CFormFeedback invalid>{formErrors.nom}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="email">email</CFormLabel>
+            <CFormLabel htmlFor="email">Email</CFormLabel>
             <CFormInput type="email" name="email" value={formValues.email} valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
             <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
           </CCol>
@@ -84,7 +88,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
             <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="typePatient">Type Patient</CFormLabel>
+            <CFormLabel htmlFor="typePatient">Type of Patient</CFormLabel>
             <CFormSelect name="typePatient" valid={formErrors.typePatient ? false : true} invalid={formErrors.typePatient ? true : false} onChange={handleChange} value={formValues.typePatient}>
               <option disabled>Choose...</option>
               <option value="STAFF">STAFF</option>
@@ -95,7 +99,7 @@ const UpdatePatient = ({ changeVisibility, id, nom, email, telephone, typePatien
           <>
             <CModalFooter>
               <CButton color="success" type="submit" shape="rounded-pill">
-                Save changes
+                Save
               </CButton>
               <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close

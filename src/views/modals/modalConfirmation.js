@@ -18,7 +18,7 @@ const ModalConfirmation = ({ changeVisibility }) => {
       >
         <CModalTitle>Confirmation</CModalTitle>
       </CModalHeader>
-      <CModalBody>Are you sure you want to delete this item ? It may delete other things</CModalBody>
+      <CModalBody>Are you sure you want to delete this? It may affect other things</CModalBody>
       <CModalFooter>
         <CButton color="warning" onClick={() => confirm()}>
           Yes I want

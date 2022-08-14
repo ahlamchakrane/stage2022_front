@@ -102,7 +102,9 @@ const AllPatients = (props) => {
     if (confirmation) deletePatient(id)
     setClickDelete(false)
   }
-  const updates = (isVisible, patient) => {
+  const updates = (isVisible, error, success, patient) => {
+    setError(error)
+    setSuccess(success)
     if (patient) setPatients(patients.map((p) => (p.id === patient.id ? patient : p)))
     setVisible(isVisible)
   }
@@ -213,7 +215,7 @@ const AllPatients = (props) => {
               <CTableRow>
                 <CTableHeaderCell></CTableHeaderCell>
                 <CTableHeaderCell>Patients</CTableHeaderCell>
-                <CTableHeaderCell className="text-center">email</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">Email</CTableHeaderCell>
                 <CTableHeaderCell>Phone number</CTableHeaderCell>
                 <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
               </CTableRow>

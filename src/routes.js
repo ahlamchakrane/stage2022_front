@@ -20,13 +20,13 @@ const routes = [
   { path: '/patients', name: 'Patients', element: AllPatients, exact: true },
   { path: '/patients/all-patients', name: 'All Patients', element: AllPatients },
   { path: '/patients/add-new-patient', name: 'Add new patient', element: AddNewPatient },
-  { path: '/employes', name: 'Employes', element: AllEmployes, exact: true },
-  { path: '/employes/all-employes', name: 'All Employes', element: AllEmployes },
-  { path: '/employes/add-new-employe', name: 'Add new employe', element: AddNewEmploye },
-  { path: '/demandes', name: 'Demands', element: AllDemandes, exact: true },
-  { path: '/demandes/all-demandes-traitees', name: 'All Demands traitees', element: AllDemandesTraitees },
-  { path: '/demandes/all-demandes-non-traitees', name: 'All Demands non traitees', element: AllDemandesNonTraitees },
-  { path: '/demandes/all-demandes-patient/:patientId', name: 'All Demands Patient', element: AllDemandesPatient },
+  { path: '/employees', name: 'Employees', element: AllEmployes, exact: true },
+  { path: '/employees/all-employees', name: 'All Employees', element: AllEmployes },
+  { path: '/employees/add-new-employee', name: 'Add new employee', element: AddNewEmploye },
+  { path: '/appointments', name: 'Appointments', element: AllDemandes, exact: true },
+  { path: '/Appointments/done', name: 'Done', element: AllDemandesTraitees },
+  { path: '/Appointments/pending', name: 'Pending', element: AllDemandesNonTraitees },
+  { path: '/Appointments/patient-appointments/:patientId', name: "Patient's Appointments", element: AllDemandesPatient },
 ]
 
 export default routes

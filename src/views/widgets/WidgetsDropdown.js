@@ -11,10 +11,10 @@ const WidgetsDropdown = ({ demandes, patients, employes }) => {
         <CWidgetStatsD className="mb-3" icon={<CIcon className="my-4 text-white" icon={cilAddressBook} height={52} />} style={{ '--cui-card-cap-bg': '#4f5d73' }} values={[{ title: 'Patients', value: patients }]} />
       </CCol>
       <CCol xs={4}>
-        <CWidgetStatsD className="mb-3" icon={<CIcon className="my-4 text-white" icon={cilPeople} height={52} />} style={{ '--cui-card-cap-bg': '#4f5d73' }} values={[{ title: 'Employes', value: employes }]} />
+        <CWidgetStatsD className="mb-3" icon={<CIcon className="my-4 text-white" icon={cilPeople} height={52} />} style={{ '--cui-card-cap-bg': '#4f5d73' }} values={[{ title: 'Employees', value: employes }]} />
       </CCol>
       <CCol xs={4}>
-        <CWidgetStatsD className="mb-3" icon={<CIcon className="my-4 text-white" icon={cilEnvelopeOpen} height={52} />} style={{ '--cui-card-cap-bg': '#4f5d73' }} values={[{ title: 'Demandes', value: demandes }]} />
+        <CWidgetStatsD className="mb-3" icon={<CIcon className="my-4 text-white" icon={cilEnvelopeOpen} height={52} />} style={{ '--cui-card-cap-bg': '#4f5d73' }} values={[{ title: 'Appointments', value: demandes }]} />
       </CCol>
     </CRow>
   )

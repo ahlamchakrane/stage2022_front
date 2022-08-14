@@ -4,13 +4,14 @@ import axios from 'axios'
 import emailjs from 'emailjs-com'
 // eslint-disable-next-line react/prop-types
 const UpdateRendezVous = ({ id, changeVisibility, isVisible }) => {
-  const initialValues = { status: 'PENDING', date: new Date() }
+  const initialValues = { status: 'DONE', date: new Date() }
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
+  const [demande, setDemande] = useState()
   const [isSubmit, setIsSubmit] = useState(false)
   const [error, setError] = useState(false)
-  const [target, setTarget] = useState()
   const [success, setSuccess] = useState(false)
+  const [target, setTarget] = useState()
   const [nom, setNom] = useState(false)
   const [email, setEmail] = useState(false)
   useEffect(() => {
@@ -68,6 +69,7 @@ const UpdateRendezVous = ({ id, changeVisibility, isVisible }) => {
     axios
       .put(`/demandes/${id}`, demande)
       .then((res) => {
+        setDemande(res.data)
         sendMessage()
         setSuccess(true)
       })
@@ -83,12 +85,12 @@ const UpdateRendezVous = ({ id, changeVisibility, isVisible }) => {
     return errors
   }
   const close = () => {
-    changeVisibility(error, success)
+    changeVisibility(error, success, demande)
   }
   return (
     <CModal alignment="center" visible={true} onClose={() => close()}>
       <CModalHeader className="text-white bg-dark">
-        <CModalTitle>Planifier</CModalTitle>
+        <CModalTitle>Planification</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>

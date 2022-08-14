@@ -1,8 +1,6 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CButton, CCol, CForm, CFormFeedback, CFormInput, CFormLabel, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react'
 import axios from 'axios'
-export const DemandeContext = createContext()
-
 // eslint-disable-next-line react/prop-types
 const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   const initialValues = { date: date, status: status }
@@ -11,12 +9,15 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   const [visible, setVisible] = useState(isVisible)
   const [isSubmit, setIsSubmit] = useState(false)
   const [demande, setDemande] = useState()
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleUpdate()
     }
-  }, [formErrors])
+    if (error !== false || success !== false) close(error, success)
+  }, [formErrors, error, success])
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -34,13 +35,14 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
       .then((res) => {
         setDemande(res.data)
         setVisible(!visible)
+        setSuccess(!success)
       })
-      .catch(function (error) {
-        console.log(error.toJSON())
+      .catch(function () {
+        setError(!error)
       })
   }
   const close = () => {
-    changeVisibility(!isVisible, demande)
+    changeVisibility(!isVisible, error, success, demande)
   }
   const validate = (values) => {
     const errors = {}
@@ -51,7 +53,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
   return (
     <CModal visible={visible} onClose={() => close()}>
       <CModalHeader>
-        <CModalTitle>Edit Demandes</CModalTitle>
+        <CModalTitle>Edit Appointment</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
@@ -73,7 +75,7 @@ const UpdateDemande = ({ changeVisibility, date, status, isVisible, id }) => {
           <>
             <CModalFooter>
               <CButton color="success" type="submit" shape="rounded-pill">
-                Save changes
+                Save
               </CButton>
               <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close

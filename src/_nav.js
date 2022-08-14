@@ -20,32 +20,32 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: 'Employes',
-    to: '/employes',
+    name: 'Employees',
+    to: '/employees',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'All Employes',
-        to: '/employes/all-employes',
+        name: 'All Employees',
+        to: '/employees/all-employees',
       },
     ],
   },
   {
     component: CNavGroup,
-    name: 'Demandes',
-    to: '/demandes/all-demandes',
+    name: 'Appointments',
+    to: '/Appointments/all-Appointments',
     icon: <CIcon icon={cilEnvelopeOpen} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Demandes traitées',
-        to: '/demandes/all-demandes-traitees',
+        name: 'DONE',
+        to: '/Appointments/done',
       },
       {
         component: CNavItem,
-        name: 'Demandes pas traitées',
-        to: '/demandes/all-demandes-non-traitees',
+        name: 'PENDING',
+        to: '/Appointments/pending',
       },
     ],
   },

@@ -95,7 +95,9 @@ const AllEmployes = (props) => {
     if (confirmation) deleteEmploye(id)
     setClickDelete(false)
   }
-  const updates = (isVisible, employe) => {
+  const updates = (isVisible, error, success, employe) => {
+    setError(error)
+    setSuccess(success)
     if (employe) setEmployes(employes.map((e) => (e.id === employe.id ? employe : e)))
     setVisible(isVisible)
   }
@@ -139,7 +141,7 @@ const AllEmployes = (props) => {
       },
       tableLineColor: [0, 0, 0],
     })
-    pdf.save('employes')
+    pdf.save('employees')
   }
   //Get current page
   const indexOfLastItem = currentPage * itemsPerPage
@@ -192,9 +194,9 @@ const AllEmployes = (props) => {
             <CTableHead color="light">
               <CTableRow>
                 <CTableHeaderCell className="text-center"></CTableHeaderCell>
-                <CTableHeaderCell>Employe</CTableHeaderCell>
-                <CTableHeaderCell className="text-center">email</CTableHeaderCell>
-                <CTableHeaderCell>phone number</CTableHeaderCell>
+                <CTableHeaderCell>Employee</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">Email</CTableHeaderCell>
+                <CTableHeaderCell>Phone number</CTableHeaderCell>
                 <CTableHeaderCell>Activity</CTableHeaderCell>
                 {roles === 'ADMIN' && <CTableHeaderCell>Action</CTableHeaderCell>}
               </CTableRow>

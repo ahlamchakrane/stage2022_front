@@ -30,7 +30,7 @@ const ModalRapport = ({ rapport, id, changeVisibility, isVisible }) => {
   return (
     <CModal alignment="center" visible={visible} onClose={() => close()}>
       <CModalHeader className="btn btn-info">
-        <CModalTitle>Rapport</CModalTitle>
+        <CModalTitle>Report</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-1 needs-validation" onSubmit={handleSubmit}>

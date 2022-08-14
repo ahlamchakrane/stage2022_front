@@ -12,6 +12,9 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
@@ -41,7 +44,8 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleUpdate()
     }
-  }, [formErrors, roles])
+    if (error !== false || success !== false) close(error, success)
+  }, [formErrors, error, success, roles])
 
   const handleUpdate = () => {
     setIsSubmit(false)
@@ -51,9 +55,10 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
       .put(`/employes/${id}`, employe)
       .then((res) => {
         setEmploye(res.data)
+        setSuccess(!success)
       })
-      .catch(function (error) {
-        console.log(error.toJSON())
+      .catch(function () {
+        setError(!error)
       })
   }
   const handleSubmit = (e) => {
@@ -62,14 +67,14 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
     setIsSubmit(true)
   }
   const close = () => {
-    changeVisibility(!isVisible, employe)
+    changeVisibility(!isVisible, error, success, employe)
   }
   const validate = (values) => {
     const errors = {}
     if (!values.username) {
       errors.username = 'Username is required'
     } else if (values.username.length < 3) {
-      errors.username = 'Username length is not suffisant'
+      errors.username = 'The length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
@@ -94,7 +99,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
   return (
     <CModal visible={isVisible} onClose={() => close()}>
       <CModalHeader>
-        <CModalTitle>Edit Employés</CModalTitle>
+        <CModalTitle>Edit Employee</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
@@ -104,7 +109,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
             <CFormFeedback invalid>{formErrors.username}</CFormFeedback>
           </CCol>
           <CCol md={7}>
-            <CFormLabel htmlFor="email">email</CFormLabel>
+            <CFormLabel htmlFor="email">Email</CFormLabel>
             <CFormInput type="email" name="email" value={formValues.email} valid={formErrors.email ? false : true} invalid={formErrors.email ? true : false} required onChange={handleChange} />
             <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
           </CCol>
@@ -120,7 +125,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
               <option value="USER">USER</option>
               <option value="ADMIN">ADMIN</option>
             </CFormSelect>
-            <CFormFeedback valid>Ignoring this field, means keeping the old value</CFormFeedback>
+            <CFormFeedback valid>Ignoring this field means keeping the old value</CFormFeedback>
           </CCol>
           <CCol md={6}>
             <CFormLabel htmlFor="password">Password</CFormLabel>
@@ -135,7 +140,7 @@ const UpdateEmploye = ({ changeVisibility, id, username, email, telephone, isVis
           <>
             <CModalFooter>
               <CButton color="success" type="submit" shape="rounded-pill">
-                Save changes
+                Save
               </CButton>
               <CButton color="secondary" onClick={() => close()} shape="rounded-pill">
                 Close

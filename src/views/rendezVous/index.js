@@ -95,7 +95,7 @@ const RendezVous = ({ changeVisibility }) => {
   return (
     <CModal alignment="center" visible={true} onClose={() => close()}>
       <CModalHeader className="text-white bg-primary">
-        <CModalTitle>Get your ... </CModalTitle>
+        <CModalTitle>Get your Appointment </CModalTitle>
       </CModalHeader>
       <CModalBody>
         <CForm className="row g-3 needs-validation" onSubmit={handleSubmit}>
@@ -105,7 +105,7 @@ const RendezVous = ({ changeVisibility }) => {
             <CFormFeedback invalid>{formErrorsPatient.email}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="nom">Nom</CFormLabel>
+            <CFormLabel htmlFor="nom">Name</CFormLabel>
             <CInputGroup className="has-validation">
               <CInputGroupText>@</CInputGroupText>
               <CFormInput type="text" name="nom" defaultValue="" aria-describedby="inputGroupPrepend03" valid={formErrorsPatient.nom ? false : true} invalid={formErrorsPatient.nom ? true : false} required onChange={handleChange} />
@@ -113,11 +113,11 @@ const RendezVous = ({ changeVisibility }) => {
             </CInputGroup>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="genre">Genre</CFormLabel>
+            <CFormLabel htmlFor="genre">Gender</CFormLabel>
             <CFormSelect name="genre" valid={formErrorsPatient.genre ? false : true} invalid={formErrorsPatient.genre ? true : false} onChange={handleChange}>
               <option disabled>Choose...</option>
-              <option value="HOMME">Homme</option>
-              <option value="FEMME">Femme</option>
+              <option value="HOMME">Male</option>
+              <option value="FEMME">Female</option>
             </CFormSelect>
             <CFormFeedback invalid>{formErrorsPatient.genre}</CFormFeedback>
           </CCol>
@@ -136,7 +136,7 @@ const RendezVous = ({ changeVisibility }) => {
             <CFormFeedback invalid>{formErrorsPatient.typePatient}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="typePatient">Date rendez-vous</CFormLabel>
+            <CFormLabel htmlFor="typePatient">Appointment&rsquo;s date</CFormLabel>
             <CFormInput type="datetime-local" name="date" value={formDemande.date} valid={formErrorsDemande.date ? false : true} invalid={formErrorsDemande.date ? true : false} required className="form-control" onChange={handleChangeDemande} />
             <CFormFeedback invalid>{formErrorsDemande.date}</CFormFeedback>
           </CCol>

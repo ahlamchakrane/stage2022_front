@@ -124,11 +124,11 @@ const Dashboard = () => {
           <CRow>
             <CCol xs={6}>
               <CCard className="mb-4">
-                <CCardHeader>En chiffres</CCardHeader>
+                <CCardHeader>In numbers</CCardHeader>
                 <CCardBody>
                   <CChartPolarArea
                     data={{
-                      labels: ['DEMANDES', 'EMPLOYES', 'PATIENTS'],
+                      labels: ['Appointments', 'Employees', 'Patients'],
                       datasets: [
                         {
                           data: [demandes, employes, patients],
@@ -142,7 +142,7 @@ const Dashboard = () => {
             </CCol>
             <CCol xs={6}>
               <CCard className="mb-4">
-                <CCardHeader>Types Patients</CCardHeader>
+                <CCardHeader>Types of Patients</CCardHeader>
                 <CCardBody>
                   <CChartPolarArea
                     data={{
@@ -160,7 +160,7 @@ const Dashboard = () => {
             </CCol>
             <CCol xs={6}>
               <CCard className="mb-4">
-                <CCardHeader>Status Demandes</CCardHeader>
+                <CCardHeader>Status of Appointments</CCardHeader>
                 <CCardBody>
                   <CChartPie
                     data={{
@@ -179,11 +179,11 @@ const Dashboard = () => {
             </CCol>
             <CCol xs={6}>
               <CCard className="mb-4">
-                <CCardHeader>Genre</CCardHeader>
+                <CCardHeader>Gender</CCardHeader>
                 <CCardBody>
                   <CChartPie
                     data={{
-                      labels: ['FEMME', 'HOMME'],
+                      labels: ['FEMALE', 'MALE'],
                       datasets: [
                         {
                           data: [femme, homme],

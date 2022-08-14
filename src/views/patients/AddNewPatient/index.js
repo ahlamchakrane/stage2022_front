@@ -47,7 +47,7 @@ const AddNewPatient = ({ changeVisibility, patients, setPatients }) => {
     if (!values.nom) {
       errors.nom = 'Name is required'
     } else if (values.nom.length < 2) {
-      errors.nom = 'Name length is not suffisant'
+      errors.nom = 'The length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
@@ -61,11 +61,11 @@ const AddNewPatient = ({ changeVisibility, patients, setPatients }) => {
       errors.genre = 'Gender is required'
     }
     if (!values.typePatient) {
-      errors.typePatient = 'Type Patient is required'
+      errors.typePatient = 'Type is required'
     }
     return errors
   }
-  const close = (error, success) => {
+  const close = () => {
     changeVisibility(error, success, patients)
   }
   return (
@@ -85,7 +85,7 @@ const AddNewPatient = ({ changeVisibility, patients, setPatients }) => {
             <CFormFeedback invalid>{formErrors.email}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="nom">Nom</CFormLabel>
+            <CFormLabel htmlFor="nom">Name</CFormLabel>
             <CInputGroup className="has-validation">
               <CInputGroupText>@</CInputGroupText>
               <CFormInput type="text" name="nom" aria-describedby="inputGroupPrepend03" valid={formErrors.nom ? false : true} invalid={formErrors.nom ? true : false} required onChange={handleChange} />
@@ -93,11 +93,11 @@ const AddNewPatient = ({ changeVisibility, patients, setPatients }) => {
             </CInputGroup>
           </CCol>
           <CCol md={4}>
-            <CFormLabel htmlFor="genre">Genre</CFormLabel>
+            <CFormLabel htmlFor="genre">Gender</CFormLabel>
             <CFormSelect name="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
               <option disabled>Choose...</option>
-              <option value="HOMME">Homme</option>
-              <option value="FEMME">Femme</option>
+              <option value="HOMME">Male</option>
+              <option value="FEMME">Female</option>
             </CFormSelect>
             <CFormFeedback invalid>{formErrors.genre}</CFormFeedback>
           </CCol>

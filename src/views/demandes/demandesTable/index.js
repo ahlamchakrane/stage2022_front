@@ -74,10 +74,11 @@ const DemandesTable = ({ demandes, setDemandes }) => {
     setPlanifier(true)
     setIdPlanifier(id)
   }
-  const changePlanifier = (error, success) => {
+  const changePlanifier = (error, success, demande) => {
     setPlanifier(false)
     setError(error)
     setSuccess(success)
+    updates(null, demande)
   }
   const onClickDelete = (id, isVisible) => {
     setId(id)
@@ -130,9 +131,11 @@ const DemandesTable = ({ demandes, setDemandes }) => {
       },
       tableLineColor: [0, 0, 0],
     })
-    pdf.save('demandes')
+    pdf.save('appointments')
   }
-  const updates = (isVisible, demande) => {
+  const updates = (isVisible, error, success, demande) => {
+    setError(error)
+    setSuccess(success)
     if (demande) setDemandes(demandes.map((d) => (d.id === demande.id ? demande : d)))
     setVisible(isVisible)
   }
@@ -173,10 +176,10 @@ const DemandesTable = ({ demandes, setDemandes }) => {
           <CTable align="middle" className="mb-0 border" hover responsive>
             <CTableHead color="light">
               <CTableRow>
-                <CTableHeaderCell>Demande</CTableHeaderCell>
+                <CTableHeaderCell>Appointments</CTableHeaderCell>
                 <CTableHeaderCell>Date</CTableHeaderCell>
                 <CTableHeaderCell>Status</CTableHeaderCell>
-                <CTableHeaderCell>Planifier</CTableHeaderCell>
+                <CTableHeaderCell>Planification</CTableHeaderCell>
                 {roles === 'ADMIN' && <CTableHeaderCell>Action</CTableHeaderCell>}
               </CTableRow>
             </CTableHead>

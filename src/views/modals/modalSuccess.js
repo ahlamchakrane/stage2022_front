@@ -16,7 +16,7 @@ const ModalSuccess = ({ body, changeVisibility, isVisible }) => {
         >
           <CModalTitle>Success</CModalTitle>
         </CModalHeader>
-        <CModalBody>{body ? body : 'Tout est bien !'}</CModalBody>
+        <CModalBody>{body ? body : 'Great! Everything has been updated successfully'}</CModalBody>
         <CModalFooter>
           <CButton color="visible" onClick={() => close()}>
             Close

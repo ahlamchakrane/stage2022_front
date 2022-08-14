@@ -75,7 +75,7 @@ const AddNewEmploye = ({ changeVisibility, employes, setEmployes }) => {
     if (!values.username) {
       errors.username = 'Username is required'
     } else if (values.username.length < 3) {
-      errors.username = 'Username length is not suffisant'
+      errors.username = 'The length is not suffisant'
     }
     if (!values.email) {
       errors.email = 'Email is required'
@@ -134,7 +134,7 @@ const AddNewEmploye = ({ changeVisibility, employes, setEmployes }) => {
             <CFormFeedback invalid>{formErrors.telephone}</CFormFeedback>
           </CCol>
           <CCol md={6}>
-            <CFormLabel htmlFor="genre">Genre</CFormLabel>
+            <CFormLabel htmlFor="genre">Gender</CFormLabel>
             <CFormSelect name="genre" valid={formErrors.genre ? false : true} invalid={formErrors.genre ? true : false} onChange={handleChange}>
               <option disabled>Choose...</option>
               <option value="HOMME">Homme</option>

@@ -20,8 +20,9 @@ const Login = () => {
   const [reserver, setReserver] = useState(false)
   const [access, setAccess] = useState(false)
   // heures de travail
-  const heures = [8, 9, 10, 11, 14, 15, 16, 17]
-  const current_time = new Date().getDate() + 1
+  const heures = ['8 AM', '9 AM', '10 AM', '11 AM', '14 AM', '15 AM', '16 AM', '17 AM']
+  const current_time = new Date().toLocaleString('en-US', { hour: 'numeric', hour12: true })
+
   useEffect(() => {
     for (let i = 0; i < heures.length; i++) {
       if (current_time === heures[i]) {
@@ -99,8 +100,8 @@ const Login = () => {
   }
   return (
     <>
-      {error && <ModalError body="You can use our website from 8h-12h to 14h-18h. Thank for understanding" color="warning" changeVisibility={changeError} isVisible={error} />}
-      {demandeSuccess && <ModalSuccess body="Un message de confirmation vous sera envoyé une fois que la demande sera traité par notre team. Merci !" changeVisibility={changeSuccess} isVisible={demandeSuccess} />}
+      {error && <ModalError body="We are sorry ! You can use our website from 8h-12h to 14h-18h" color="warning" changeVisibility={changeError} isVisible={error} />}
+      {demandeSuccess && <ModalSuccess body="A confirmation message will be sent to you once the request has been processed by our team. Thanks!" changeVisibility={changeSuccess} isVisible={demandeSuccess} />}
       {success && <NavLink to={<DefaultLayout />} />}
       {reserver && <RendezVous changeVisibility={changeReserver} isVisible={reserver} success={false} error={false} />}
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -136,8 +137,8 @@ const Login = () => {
                 <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                   <CCardBody className="text-center">
                     <div>
-                      <h3>Rendez-Vous ?</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                      <h3>Appointment ?</h3>
+                      <p>Health center team invite you to click here so you get your appointment</p>
                       <button className="btn btn-primary mt-3 active" aria-current="page" type="button" tabIndex="-1" onClick={(e) => onReserve()}>
                         Get Started !
                       </button>
